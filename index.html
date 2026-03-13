@@ -926,27 +926,162 @@ footer{
   color:rgba(247,244,239,.35);
 }
 
+/* ===== MOBILE BOTTOM NAV ===== */
+.bottom-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  background:rgba(247,244,239,0.97);
+  backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  padding:0 4px env(safe-area-inset-bottom,0);
+  height:60px;
+  align-items:center;
+  justify-content:space-around;
+}
+.bnav-btn{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:3px;
+  background:none;border:none;cursor:pointer;
+  padding:6px 8px;border-radius:12px;
+  min-width:44px;min-height:44px;
+  transition:background .15s;
+  -webkit-tap-highlight-color:transparent;
+  flex:1;
+}
+.bnav-btn:active{background:var(--bg2)}
+.bnav-btn.active .bnav-icon{font-size:22px}
+.bnav-icon{font-size:20px;line-height:1;transition:transform .2s}
+.bnav-btn.active .bnav-icon{transform:scale(1.15)}
+.bnav-label{
+  font-family:'Syne',sans-serif;
+  font-size:9px;font-weight:700;
+  letter-spacing:.3px;
+  color:var(--muted);
+  transition:color .15s;
+  white-space:nowrap;
+}
+.bnav-btn.active .bnav-label{color:var(--accent)}
+
 /* ===== RESPONSIVE ===== */
 @media(max-width:900px){
-  .hero{grid-template-columns:1fr;padding:40px 24px;gap:40px}
-  .hero-title{font-size:42px}
-  .hero-right{padding-left:0}
-  .stats-bar{gap:32px;padding:24px}
-  .stat-num{font-size:32px}
-  .section{padding:48px 24px 0}
+  /* hide desktop header actions */
+  .header-actions{display:none}
   nav{display:none}
-  .reminder-layout{grid-template-columns:1fr}
+
+  /* show bottom nav */
+  .bottom-nav{display:flex}
+
+  /* give pages space for bottom nav */
+  .page{padding-bottom:70px}
+
+  /* hero becomes single column */
+  .hero{
+    grid-template-columns:1fr;
+    min-height:auto;
+    padding:32px 20px 24px;
+    gap:28px;
+  }
+  .hero-title{font-size:40px;letter-spacing:-1.5px}
+  .hero-desc{font-size:15px;max-width:100%}
+  .hero-right{padding-left:0}
+
+  /* stats bar */
+  .stats-bar{
+    padding:20px 16px;
+    gap:0;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+  }
+  .stat-item{padding:0 4px}
+  .stat-num{font-size:22px}
+  .stat-label{font-size:9px;letter-spacing:.5px}
+
+  /* sections */
+  .section{padding:32px 16px 0}
+  .section-title{font-size:26px}
+
+  /* filter tabs: horizontal scroll */
+  .filter-tabs{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    gap:8px;
+    padding-bottom:4px;
+    scrollbar-width:none;
+  }
+  .filter-tabs::-webkit-scrollbar{display:none}
+  .filter-tab{flex-shrink:0;font-size:12px;padding:7px 14px}
+
+  /* teacher cards: single column */
+  .teachers-grid{grid-template-columns:1fr;gap:16px}
+  .teacher-card-top{padding:20px 18px 16px}
+  .teacher-avatar{width:60px;height:60px;font-size:30px}
+  .teacher-body{padding:16px 18px}
+  .teacher-bio{font-size:12px}
+
+  /* video cards: single column */
+  .videos-grid{grid-template-columns:1fr;gap:16px}
+  .video-thumb{height:160px}
+
+  /* translate: stack vertically */
+  .translate-box{border-radius:12px}
+  .translate-header{flex-wrap:wrap;gap:10px;padding:12px 16px}
+  .translate-header span{display:none}
+  .lang-select{flex:1;min-width:0;font-size:13px;padding:8px 10px}
+  .translate-body{grid-template-columns:1fr;grid-template-rows:auto auto}
+  .translate-pane{padding:16px}
+  .translate-pane:first-child{border-right:none;border-bottom:1px solid var(--border)}
+  .translate-textarea{font-size:15px;min-height:120px}
+  .translate-result{font-size:15px;min-height:80px}
+  .translate-footer{padding:10px 16px}
+  .translate-examples{grid-template-columns:1fr 1fr;gap:10px}
+  .example-phrase{padding:12px}
+
+  /* flashcards */
+  .flashcard-area{padding:0}
+  .flashcard{height:240px}
+  .flashcard-word{font-size:34px}
+  .fc-nav-btn{padding:10px 18px;font-size:12px}
+
+  /* quiz */
+  .quiz-box{padding:24px 18px;border-radius:16px}
+  .quiz-question{font-size:18px}
+  .quiz-options{grid-template-columns:1fr;gap:10px}
+  .quiz-option{padding:14px 16px}
+
+  /* gallery */
+  .gallery-grid{grid-template-columns:repeat(3,1fr);gap:10px}
+  .gallery-emoji{font-size:36px}
+
+  /* reminders */
+  .reminder-layout{grid-template-columns:1fr;gap:20px}
+  .reminder-form-box{padding:20px}
+  .form-row-2{grid-template-columns:1fr}
+
+  /* modal */
+  .modal-box{border-radius:16px 16px 0 0;position:fixed!important;bottom:0;left:0;right:0;width:100%!important;max-width:100vw!important}
+  .modal-overlay{align-items:flex-end}
+  .modal-video-area{height:240px}
+  .modal-info{padding:18px 20px}
+
+  /* footer */
   .footer-grid{grid-template-columns:1fr 1fr}
   .footer-brand{grid-column:span 2}
-  .quiz-options{grid-template-columns:1fr}
-  .translate-body{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
-  .translate-pane:first-child{border-right:none;border-bottom:1px solid var(--border)}
+  footer{padding:32px 20px;margin-top:40px}
+
+  /* toast: center bottom + above bottom nav */
+  .toast{bottom:72px;right:16px;left:16px;max-width:100%;text-align:center}
+
+  /* header slimmer */
+  header{height:56px;padding:0 16px}
+  .logo{font-size:20px}
 }
-@media(max-width:500px){
-  header{padding:0 16px}
-  .hero{padding:32px 16px}
-  .section{padding:36px 16px 0}
-  .stats-bar{flex-wrap:wrap;gap:20px;padding:24px 16px}
+
+@media(max-width:400px){
+  .hero-title{font-size:34px}
+  .stats-bar{grid-template-columns:repeat(3,1fr);gap:8px}
+  .stat-item:nth-child(4),.stat-item:nth-child(5){display:none}
+  .gallery-grid{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
@@ -1345,6 +1480,34 @@ footer{
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="bnav-btn active" id="bnav-home" onclick="mobileNav('home','bnav-home')">
+    <span class="bnav-icon">🏠</span><span class="bnav-label">Ana Sayfa</span>
+  </button>
+  <button class="bnav-btn" id="bnav-teachers" onclick="mobileNav('teachers','bnav-teachers')">
+    <span class="bnav-icon">👩‍🏫</span><span class="bnav-label">Hocalar</span>
+  </button>
+  <button class="bnav-btn" id="bnav-videos" onclick="mobileNav('videos','bnav-videos')">
+    <span class="bnav-icon">🎬</span><span class="bnav-label">Videolar</span>
+  </button>
+  <button class="bnav-btn" id="bnav-translate" onclick="mobileNav('translate','bnav-translate')">
+    <span class="bnav-icon">🌐</span><span class="bnav-label">Çevirici</span>
+  </button>
+  <button class="bnav-btn" id="bnav-more" onclick="toggleMoreMenu()">
+    <span class="bnav-icon">☰</span><span class="bnav-label">Daha Fazla</span>
+  </button>
+</nav>
+<div id="more-overlay" onclick="closeMoreMenu()" style="display:none;position:fixed;inset:0;z-index:280"></div>
+<div id="more-sheet" style="display:none;position:fixed;bottom:60px;left:0;right:0;z-index:290;background:rgba(247,244,239,0.98);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:16px 16px 20px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <button onclick="mobileNav('flashcards','');closeMoreMenu()" style="display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;cursor:pointer;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);-webkit-tap-highlight-color:transparent"><span style="font-size:22px">🃏</span>Kelime Kartları</button>
+    <button onclick="mobileNav('quiz','');closeMoreMenu()" style="display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;cursor:pointer;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);-webkit-tap-highlight-color:transparent"><span style="font-size:22px">📝</span>Seviye Testi</button>
+    <button onclick="mobileNav('gallery','');closeMoreMenu()" style="display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;cursor:pointer;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);-webkit-tap-highlight-color:transparent"><span style="font-size:22px">🌍</span>Galeri</button>
+    <button onclick="mobileNav('reminders','');closeMoreMenu()" style="display:flex;align-items:center;gap:10px;background:var(--accent);border:none;border-radius:14px;padding:14px;cursor:pointer;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff;-webkit-tap-highlight-color:transparent"><span style="font-size:22px">⏰</span>Hatırlatıcılar</button>
+  </div>
+</div>
 
 <!-- FOOTER -->
 <footer>
@@ -2029,6 +2192,16 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'),2800);
 }
 
+// MOBILE NAV
+const BNAV_MAP={home:"bnav-home",teachers:"bnav-teachers",videos:"bnav-videos",translate:"bnav-translate"};
+function mobileNav(page,bid){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById("page-"+page).classList.add("active");document.querySelectorAll(".bnav-btn").forEach(b=>b.classList.remove("active"));if(bid)document.getElementById(bid)?.classList.add("active");window.scrollTo({top:0,behavior:"smooth"});}
+const _sp=showPage;
+showPage=function(id,btn){_sp(id,btn);document.querySelectorAll(".bnav-btn").forEach(b=>b.classList.remove("active"));if(BNAV_MAP[id])document.getElementById(BNAV_MAP[id])?.classList.add("active");};
+function toggleMoreMenu(){const s=document.getElementById("more-sheet"),o=document.getElementById("more-overlay"),op=s.style.display==="block";s.style.display=op?"none":"block";o.style.display=op?"none":"block";}
+function closeMoreMenu(){document.getElementById("more-sheet").style.display="none";document.getElementById("more-overlay").style.display="none";}
+let _tsx=0;
+document.addEventListener("touchstart",e=>{_tsx=e.touches[0].clientX},{passive:true});
+document.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-_tsx;if(Math.abs(dx)<80)return;const ap=document.querySelector(".page.active");if(!ap)return;const po=["home","teachers","videos","translate","flashcards","quiz","gallery","reminders"];const ci=po.indexOf(ap.id.replace("page-",""));if(dx<0&&ci<po.length-1)showPage(po[ci+1],null);else if(dx>0&&ci>0)showPage(po[ci-1],null);},{passive:true});
 init();
 </script>
 </body>
