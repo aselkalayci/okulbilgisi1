@@ -1,0 +1,2035 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DilKampüsü — Dil Öğrenme Platformu</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f4ef;
+  --bg2: #edeae3;
+  --surface: #ffffff;
+  --surface2: #f0ece4;
+  --ink: #1a1814;
+  --ink2: #4a4540;
+  --muted: #8a8278;
+  --accent: #c8522a;
+  --accent2: #2a6e4e;
+  --accent3: #2a4a8e;
+  --gold: #c4922a;
+  --border: #d8d3ca;
+  --radius: 16px;
+  --shadow: 0 4px 24px rgba(26,24,20,0.08);
+  --shadow-lg: 0 12px 48px rgba(26,24,20,0.14);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Lora',Georgia,serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ===== HEADER ===== */
+header{
+  position:sticky;top:0;z-index:200;
+  background:rgba(247,244,239,0.95);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  height:68px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;
+}
+.logo{
+  font-family:'Syne',sans-serif;
+  font-size:24px;font-weight:800;
+  color:var(--ink);
+  letter-spacing:-1px;
+  display:flex;align-items:center;gap:8px;
+}
+.logo-dot{
+  width:10px;height:10px;
+  background:var(--accent);
+  border-radius:50%;
+  display:inline-block;
+}
+nav{display:flex;align-items:center;gap:4px}
+.nav-btn{
+  font-family:'Syne',sans-serif;
+  font-size:13px;font-weight:600;
+  background:none;border:none;
+  color:var(--muted);cursor:pointer;
+  padding:8px 14px;border-radius:8px;
+  transition:all .2s;letter-spacing:.3px;
+}
+.nav-btn:hover{color:var(--ink);background:var(--bg2)}
+.nav-btn.active{color:var(--accent);background:rgba(200,82,42,.08)}
+.header-actions{display:flex;gap:10px;align-items:center}
+.btn-primary{
+  font-family:'Syne',sans-serif;
+  font-size:13px;font-weight:700;
+  background:var(--accent);color:#fff;
+  border:none;border-radius:10px;
+  padding:9px 20px;cursor:pointer;
+  transition:all .2s;letter-spacing:.3px;
+}
+.btn-primary:hover{background:#b04020;transform:translateY(-1px)}
+.btn-outline{
+  font-family:'Syne',sans-serif;
+  font-size:13px;font-weight:600;
+  background:none;color:var(--ink);
+  border:1.5px solid var(--border);
+  border-radius:10px;padding:8px 18px;
+  cursor:pointer;transition:all .2s;
+}
+.btn-outline:hover{border-color:var(--ink);background:var(--ink);color:#fff}
+
+/* ===== PAGES ===== */
+.page{display:none;animation:fadeIn .3s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== HERO ===== */
+.hero{
+  min-height:calc(100vh - 68px);
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;gap:0;
+  max-width:1200px;margin:0 auto;
+  padding:60px 48px;
+}
+.hero-left{}
+.hero-eyebrow{
+  font-family:'Syne',sans-serif;
+  font-size:11px;font-weight:700;
+  letter-spacing:3px;color:var(--accent);
+  text-transform:uppercase;margin-bottom:24px;
+  display:flex;align-items:center;gap:10px;
+}
+.hero-eyebrow::before{
+  content:'';display:block;
+  width:32px;height:2px;background:var(--accent);
+}
+.hero-title{
+  font-family:'Syne',sans-serif;
+  font-size:64px;font-weight:800;
+  line-height:1.05;letter-spacing:-2px;
+  margin-bottom:24px;
+}
+.hero-title .line2{color:var(--accent)}
+.hero-desc{
+  font-size:17px;line-height:1.8;
+  color:var(--ink2);margin-bottom:40px;
+  font-style:italic;
+  max-width:460px;
+}
+.hero-cta{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.hero-note{
+  font-family:'Syne',sans-serif;
+  font-size:12px;color:var(--muted);
+  margin-top:20px;
+}
+.hero-right{
+  display:flex;flex-direction:column;gap:16px;
+  padding-left:48px;
+}
+.lang-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px 24px;
+  display:flex;align-items:center;
+  justify-content:space-between;
+  cursor:pointer;
+  transition:all .2s;
+  box-shadow:var(--shadow);
+}
+.lang-card:hover{
+  border-color:var(--accent);
+  transform:translateX(6px);
+  box-shadow:var(--shadow-lg);
+}
+.lang-card-left{display:flex;align-items:center;gap:16px}
+.lang-flag{font-size:32px}
+.lang-name{
+  font-family:'Syne',sans-serif;
+  font-size:16px;font-weight:700;
+}
+.lang-speakers{font-size:13px;color:var(--muted);margin-top:2px}
+.lang-card-right{display:flex;align-items:center;gap:10px}
+.lang-level-bar{
+  width:80px;height:6px;
+  background:var(--bg2);border-radius:3px;
+  overflow:hidden;
+}
+.lang-level-fill{height:100%;border-radius:3px;background:var(--accent)}
+.lang-arrow{color:var(--muted);font-size:18px}
+
+/* ===== STATS BAR ===== */
+.stats-bar{
+  background:var(--ink);
+  padding:32px 48px;
+  display:flex;justify-content:center;
+  gap:64px;
+}
+.stat-item{text-align:center}
+.stat-num{
+  font-family:'Syne',sans-serif;
+  font-size:42px;font-weight:800;
+  color:var(--accent);letter-spacing:-1px;
+}
+.stat-label{
+  font-family:'Syne',sans-serif;
+  font-size:12px;font-weight:600;
+  color:rgba(247,244,239,.5);
+  text-transform:uppercase;
+  letter-spacing:2px;margin-top:4px;
+}
+
+/* ===== SECTION LAYOUT ===== */
+.section{
+  max-width:1200px;margin:0 auto;
+  padding:72px 48px 0;
+}
+.section-header{
+  display:flex;justify-content:space-between;
+  align-items:flex-end;margin-bottom:36px;
+}
+.section-title-group{}
+.section-label{
+  font-family:'Syne',sans-serif;
+  font-size:11px;font-weight:700;
+  letter-spacing:3px;color:var(--accent);
+  text-transform:uppercase;margin-bottom:8px;
+}
+.section-title{
+  font-family:'Syne',sans-serif;
+  font-size:36px;font-weight:800;
+  letter-spacing:-1px;line-height:1.1;
+}
+.section-see-all{
+  font-family:'Syne',sans-serif;
+  font-size:13px;font-weight:600;
+  color:var(--ink2);cursor:pointer;
+  border-bottom:1.5px solid var(--border);
+  padding-bottom:2px;background:none;border-top:none;
+  border-left:none;border-right:none;
+  transition:color .2s,border-color .2s;
+}
+.section-see-all:hover{color:var(--accent);border-color:var(--accent)}
+
+/* ===== FILTER TABS ===== */
+.filter-tabs{
+  display:flex;gap:8px;margin-bottom:28px;
+  flex-wrap:wrap;
+}
+.filter-tab{
+  font-family:'Syne',sans-serif;
+  font-size:13px;font-weight:600;
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  color:var(--ink2);border-radius:50px;
+  padding:8px 18px;cursor:pointer;
+  transition:all .2s;
+}
+.filter-tab:hover,.filter-tab.active{
+  background:var(--ink);color:#fff;border-color:var(--ink);
+}
+
+/* ===== TEACHER CARDS ===== */
+.teachers-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:24px;
+}
+.teacher-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  transition:transform .25s,box-shadow .25s,border-color .25s;
+  cursor:pointer;
+}
+.teacher-card:hover{
+  transform:translateY(-6px);
+  box-shadow:var(--shadow-lg);
+  border-color:var(--accent);
+}
+.teacher-card-top{
+  padding:28px 24px 20px;
+  background:linear-gradient(135deg,var(--bg2),var(--surface2));
+  display:flex;align-items:center;gap:18px;
+}
+.teacher-avatar{
+  width:72px;height:72px;border-radius:50%;
+  background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;border:3px solid var(--surface);
+  box-shadow:0 4px 12px rgba(0,0,0,.1);
+  flex-shrink:0;
+}
+.teacher-header-info{}
+.teacher-badge{
+  font-family:'Syne',sans-serif;
+  font-size:10px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;
+  background:var(--accent);color:#fff;
+  border-radius:4px;padding:3px 8px;
+  display:inline-block;margin-bottom:6px;
+}
+.teacher-badge.green{background:var(--accent2)}
+.teacher-badge.blue{background:var(--accent3)}
+.teacher-name{
+  font-family:'Syne',sans-serif;
+  font-size:16px;font-weight:700;line-height:1.2;
+}
+.teacher-origin{font-size:12px;color:var(--muted);margin-top:2px}
+.teacher-body{padding:20px 24px}
+.teacher-langs{
+  display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;
+}
+.t-lang-tag{
+  font-family:'Syne',sans-serif;
+  font-size:11px;font-weight:600;
+  border:1px solid var(--border);
+  border-radius:6px;padding:3px 9px;
+  color:var(--ink2);
+}
+.teacher-bio{
+  font-size:13px;line-height:1.7;
+  color:var(--ink2);margin-bottom:16px;
+}
+.teacher-stats{
+  display:flex;gap:16px;margin-bottom:16px;
+}
+.t-stat{
+  display:flex;flex-direction:column;align-items:center;
+  background:var(--bg2);border-radius:8px;
+  padding:8px 14px;flex:1;
+}
+.t-stat-val{
+  font-family:'Syne',sans-serif;
+  font-size:16px;font-weight:700;color:var(--ink);
+}
+.t-stat-key{font-size:10px;color:var(--muted);margin-top:2px;text-align:center}
+.stars-row{display:flex;align-items:center;gap:6px;margin-bottom:14px}
+.stars{color:var(--gold);font-size:14px}
+.rating-val{
+  font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:700;
+}
+.reviews-count{font-size:12px;color:var(--muted)}
+.price-row{
+  display:flex;align-items:center;
+  justify-content:space-between;margin-bottom:12px;
+}
+.price{
+  font-family:'Syne',sans-serif;
+  font-size:20px;font-weight:800;color:var(--ink);
+}
+.price span{font-size:13px;font-weight:400;color:var(--muted)}
+.availability{
+  font-size:12px;font-weight:600;
+  color:var(--accent2);
+  display:flex;align-items:center;gap:4px;
+}
+.avail-dot{
+  width:7px;height:7px;
+  border-radius:50%;background:var(--accent2);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.btn-book{
+  width:100%;
+  font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:700;
+  background:var(--ink);color:#fff;
+  border:none;border-radius:10px;
+  padding:11px;cursor:pointer;
+  transition:all .2s;
+}
+.btn-book:hover{background:var(--accent)}
+
+/* ===== VIDEOS GRID ===== */
+.videos-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:24px;
+}
+.video-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .25s,box-shadow .25s;
+}
+.video-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
+.video-thumb{
+  width:100%;height:190px;
+  background:linear-gradient(135deg,var(--bg2),var(--surface2));
+  display:flex;align-items:center;justify-content:center;
+  position:relative;font-size:56px;
+}
+.video-overlay{
+  position:absolute;inset:0;
+  background:rgba(26,24,20,.4);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .2s;
+}
+.video-card:hover .video-overlay{opacity:1}
+.play-circle{
+  width:58px;height:58px;border-radius:50%;
+  background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;color:#fff;padding-left:4px;
+}
+.vid-top-tags{
+  position:absolute;top:12px;left:12px;right:12px;
+  display:flex;justify-content:space-between;
+}
+.vid-lang-badge{
+  font-family:'Syne',sans-serif;
+  font-size:10px;font-weight:700;
+  background:var(--accent);color:#fff;
+  border-radius:6px;padding:3px 8px;
+}
+.vid-level-badge{
+  font-family:'Syne',sans-serif;
+  font-size:10px;font-weight:700;
+  background:rgba(26,24,20,.7);color:#fff;
+  border-radius:6px;padding:3px 8px;
+}
+.vid-duration{
+  position:absolute;bottom:10px;right:10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:500;
+  background:rgba(26,24,20,.75);color:#fff;
+  border-radius:5px;padding:2px 7px;
+}
+.video-info{padding:18px 20px}
+.video-title{
+  font-family:'Syne',sans-serif;
+  font-size:15px;font-weight:700;
+  line-height:1.4;margin-bottom:8px;
+}
+.video-desc{
+  font-size:12px;color:var(--muted);
+  line-height:1.6;margin-bottom:10px;
+}
+.video-meta{
+  display:flex;gap:14px;
+  font-family:'Syne',sans-serif;
+  font-size:11px;font-weight:600;color:var(--muted);
+}
+
+/* ===== TRANSLATION TOOL ===== */
+.translate-box{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  max-width:900px;margin:0 auto;
+}
+.translate-header{
+  display:flex;align-items:center;
+  padding:16px 24px;
+  border-bottom:1px solid var(--border);
+  gap:16px;background:var(--bg2);
+}
+.translate-header span{
+  font-family:'Syne',sans-serif;
+  font-size:13px;font-weight:700;color:var(--muted);
+}
+.lang-select{
+  font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:700;
+  background:var(--surface);border:1.5px solid var(--border);
+  color:var(--ink);border-radius:8px;
+  padding:8px 14px;cursor:pointer;outline:none;
+  transition:border-color .2s;
+}
+.lang-select:focus{border-color:var(--accent)}
+.swap-btn{
+  font-size:20px;cursor:pointer;
+  background:none;border:none;
+  transition:transform .3s;color:var(--ink2);
+}
+.swap-btn:hover{transform:rotate(180deg)}
+.translate-body{
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:200px;
+}
+.translate-pane{padding:24px}
+.translate-pane:first-child{border-right:1px solid var(--border)}
+.translate-textarea{
+  width:100%;min-height:150px;
+  font-family:'Lora',Georgia,serif;
+  font-size:17px;color:var(--ink);
+  background:none;border:none;outline:none;
+  resize:none;line-height:1.7;
+}
+.translate-result{
+  font-family:'Lora',Georgia,serif;
+  font-size:17px;color:var(--ink2);
+  line-height:1.7;min-height:150px;
+  font-style:italic;
+}
+.translate-footer{
+  padding:14px 24px;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;
+  align-items:center;background:var(--bg2);
+}
+.translate-footer-left{
+  font-size:12px;color:var(--muted);
+  font-family:'Syne',sans-serif;
+}
+.btn-translate{
+  font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:700;
+  background:var(--accent);color:#fff;
+  border:none;border-radius:9px;
+  padding:10px 24px;cursor:pointer;
+  transition:all .2s;
+}
+.btn-translate:hover{background:#b04020}
+.translate-examples{
+  margin-top:28px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:14px;
+}
+.example-phrase{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;padding:16px;
+  cursor:pointer;transition:all .2s;
+}
+.example-phrase:hover{border-color:var(--accent);transform:translateY(-2px)}
+.ep-original{
+  font-size:14px;font-weight:600;color:var(--ink);
+  margin-bottom:4px;
+}
+.ep-translation{
+  font-size:13px;color:var(--muted);
+  font-style:italic;
+}
+.ep-lang{
+  font-family:'Syne',sans-serif;
+  font-size:10px;font-weight:700;
+  color:var(--accent);letter-spacing:1px;
+  text-transform:uppercase;margin-top:8px;
+}
+
+/* ===== FLASHCARDS ===== */
+.flashcard-area{
+  max-width:600px;margin:0 auto;text-align:center;
+}
+.flashcard-controls{
+  display:flex;gap:10px;justify-content:center;
+  margin-bottom:28px;flex-wrap:wrap;
+}
+.flashcard{
+  width:100%;height:280px;
+  perspective:1000px;margin-bottom:24px;cursor:pointer;
+}
+.flashcard-inner{
+  width:100%;height:100%;
+  transition:transform .6s;
+  transform-style:preserve-3d;
+  position:relative;
+}
+.flashcard.flipped .flashcard-inner{transform:rotateY(180deg)}
+.flashcard-front,.flashcard-back{
+  position:absolute;inset:0;
+  backface-visibility:hidden;
+  background:var(--surface);
+  border:2px solid var(--border);
+  border-radius:20px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:32px;
+  box-shadow:var(--shadow-lg);
+}
+.flashcard-back{
+  transform:rotateY(180deg);
+  background:var(--ink);color:#fff;
+}
+.flashcard-word{
+  font-family:'Syne',sans-serif;
+  font-size:42px;font-weight:800;
+  letter-spacing:-1px;margin-bottom:8px;
+}
+.flashcard-back .flashcard-word{color:var(--accent)}
+.flashcard-hint{font-size:14px;color:var(--muted)}
+.flashcard-back .flashcard-hint{color:rgba(247,244,239,.6)}
+.flashcard-translation{
+  font-size:24px;font-style:italic;
+  margin-top:12px;
+}
+.fc-tag{
+  font-family:'Syne',sans-serif;
+  font-size:11px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--accent);margin-bottom:16px;
+}
+.flashcard-back .fc-tag{color:rgba(200,82,42,.8)}
+.flashcard-nav{
+  display:flex;gap:14px;justify-content:center;
+  margin-bottom:16px;
+}
+.fc-nav-btn{
+  font-family:'Syne',sans-serif;
+  font-size:13px;font-weight:700;
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  color:var(--ink);border-radius:10px;
+  padding:10px 28px;cursor:pointer;
+  transition:all .2s;
+}
+.fc-nav-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.fc-nav-btn.correct{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+.fc-nav-btn.wrong{background:#c0392b;color:#fff;border-color:#c0392b}
+.flashcard-progress{
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;color:var(--muted);margin-bottom:8px;
+}
+.progress-bar{
+  height:6px;background:var(--bg2);
+  border-radius:3px;overflow:hidden;margin-bottom:24px;
+}
+.progress-fill{
+  height:100%;background:var(--accent);
+  border-radius:3px;transition:width .3s;
+}
+
+/* ===== LEVEL TEST ===== */
+.quiz-box{
+  max-width:680px;margin:0 auto;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:40px;
+  box-shadow:var(--shadow);
+}
+.quiz-header{margin-bottom:28px}
+.quiz-qnum{
+  font-family:'Syne',sans-serif;
+  font-size:12px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--accent);margin-bottom:12px;
+}
+.quiz-question{
+  font-family:'Syne',sans-serif;
+  font-size:22px;font-weight:700;
+  line-height:1.4;
+}
+.quiz-options{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:12px;margin:24px 0;
+}
+.quiz-option{
+  font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:600;
+  background:var(--bg2);
+  border:2px solid var(--border);
+  color:var(--ink);border-radius:12px;
+  padding:14px 18px;cursor:pointer;
+  transition:all .2s;text-align:left;
+}
+.quiz-option:hover{border-color:var(--ink);background:var(--surface)}
+.quiz-option.selected{
+  border-color:var(--accent3);
+  background:rgba(42,74,142,.08);color:var(--accent3);
+}
+.quiz-option.correct{
+  border-color:var(--accent2);
+  background:rgba(42,110,78,.1);color:var(--accent2);
+}
+.quiz-option.wrong{
+  border-color:#c0392b;
+  background:rgba(192,57,43,.08);color:#c0392b;
+}
+.quiz-footer{
+  display:flex;justify-content:space-between;
+  align-items:center;
+}
+.quiz-score{
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;color:var(--muted);
+}
+.result-box{
+  text-align:center;padding:20px 0;
+}
+.result-level{
+  font-family:'Syne',sans-serif;
+  font-size:64px;font-weight:800;
+  color:var(--accent);letter-spacing:-2px;
+}
+.result-desc{
+  font-size:16px;color:var(--ink2);
+  line-height:1.7;margin-top:12px;margin-bottom:24px;
+}
+
+/* ===== REMINDERS ===== */
+.reminder-layout{
+  max-width:860px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:32px;
+}
+.reminder-form-box{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:28px;
+  box-shadow:var(--shadow);
+  height:fit-content;
+}
+.reminder-list-box{}
+.form-title{
+  font-family:'Syne',sans-serif;
+  font-size:18px;font-weight:700;
+  margin-bottom:20px;
+}
+.form-group{margin-bottom:16px}
+.form-label{
+  font-family:'Syne',sans-serif;
+  font-size:11px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:7px;
+}
+.form-input,.form-select{
+  width:100%;
+  font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:500;
+  background:var(--bg2);
+  border:1.5px solid var(--border);
+  color:var(--ink);border-radius:10px;
+  padding:11px 14px;outline:none;
+  transition:border-color .2s;
+}
+.form-input:focus,.form-select:focus{border-color:var(--accent)}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-select option{background:var(--bg2)}
+.reminder-item{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px 20px;
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.04);
+  transition:box-shadow .2s;
+}
+.reminder-item:hover{box-shadow:var(--shadow)}
+.r-icon{
+  width:48px;height:48px;
+  background:var(--bg2);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+}
+.r-detail{flex:1}
+.r-title{
+  font-family:'Syne',sans-serif;
+  font-size:15px;font-weight:700;margin-bottom:3px;
+}
+.r-meta{font-size:12px;color:var(--muted)}
+.r-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.r-tag{
+  font-family:'Syne',sans-serif;
+  font-size:11px;font-weight:700;
+  background:rgba(200,82,42,.12);
+  color:var(--accent);
+  border-radius:6px;padding:3px 10px;
+}
+.r-del{
+  background:none;border:1px solid var(--border);
+  color:var(--muted);border-radius:6px;
+  padding:5px 9px;cursor:pointer;font-size:14px;
+  transition:all .2s;
+}
+.r-del:hover{border-color:#c0392b;color:#c0392b}
+.empty-reminders{
+  text-align:center;padding:48px 24px;
+  color:var(--muted);
+}
+.empty-icon{font-size:48px;margin-bottom:12px}
+.empty-text{
+  font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:600;
+}
+.upcoming-banner{
+  background:linear-gradient(135deg,var(--accent),#b04020);
+  border-radius:var(--radius);padding:20px 24px;
+  color:#fff;margin-bottom:20px;
+  display:flex;align-items:center;gap:16px;
+}
+.upcoming-icon{font-size:32px}
+.upcoming-text{}
+.upcoming-title{
+  font-family:'Syne',sans-serif;
+  font-size:16px;font-weight:700;
+}
+.upcoming-sub{font-size:13px;opacity:.8;margin-top:3px}
+
+/* ===== MODAL ===== */
+.modal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(26,24,20,.8);z-index:500;
+  align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.open{display:flex}
+.modal-box{
+  background:var(--surface);
+  border-radius:20px;
+  width:680px;max-width:95vw;
+  overflow:hidden;
+  box-shadow:var(--shadow-lg);
+  animation:modalIn .3s ease;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.modal-close{
+  position:absolute;top:16px;right:16px;
+  background:var(--bg2);border:none;
+  width:36px;height:36px;border-radius:50%;
+  cursor:pointer;font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink);z-index:10;transition:background .2s;
+}
+.modal-close:hover{background:var(--border)}
+.modal-video-area{
+  width:100%;height:360px;
+  background:var(--ink);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:16px;position:relative;
+}
+.modal-emoji{font-size:72px}
+.mock-play-btn{
+  width:64px;height:64px;border-radius:50%;
+  background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;color:#fff;cursor:pointer;
+  transition:transform .2s;padding-left:5px;
+}
+.mock-play-btn:hover{transform:scale(1.1)}
+.modal-video-title{
+  font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:600;
+  color:rgba(247,244,239,.6);
+  position:absolute;bottom:16px;left:16px;
+}
+.modal-info{padding:24px 28px}
+.modal-title{
+  font-family:'Syne',sans-serif;
+  font-size:22px;font-weight:800;
+  margin-bottom:8px;
+}
+.modal-desc{font-size:14px;color:var(--ink2);line-height:1.7}
+.modal-tags{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.modal-tag{
+  font-family:'Syne',sans-serif;
+  font-size:11px;font-weight:700;
+  border:1px solid var(--border);
+  color:var(--muted);border-radius:6px;
+  padding:4px 10px;
+}
+
+/* ===== GALLERY ===== */
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:16px;
+}
+.gallery-card{
+  aspect-ratio:1;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:8px;cursor:pointer;
+  transition:all .25s;
+  overflow:hidden;position:relative;
+}
+.gallery-card::after{
+  content:'';position:absolute;inset:0;
+  background:var(--ink);opacity:0;
+  transition:opacity .25s;
+}
+.gallery-card:hover::after{opacity:.08}
+.gallery-card:hover{transform:scale(1.04);border-color:var(--accent);box-shadow:var(--shadow)}
+.gallery-emoji{font-size:56px}
+.gallery-label{
+  font-family:'Syne',sans-serif;
+  font-size:12px;font-weight:700;
+  color:var(--ink2);letter-spacing:.5px;
+}
+.gallery-sub{font-size:11px;color:var(--muted)}
+
+/* ===== TOAST ===== */
+.toast{
+  position:fixed;bottom:28px;right:28px;
+  background:var(--ink);color:var(--bg);
+  border-radius:12px;padding:14px 22px;
+  font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:600;
+  transform:translateY(80px);opacity:0;
+  transition:all .3s;z-index:999;
+  box-shadow:var(--shadow-lg);
+  max-width:320px;
+}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ===== FOOTER ===== */
+footer{
+  background:var(--ink);color:rgba(247,244,239,.5);
+  padding:48px;margin-top:80px;
+}
+.footer-grid{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;
+}
+.footer-brand .logo{color:#f7f4ef;margin-bottom:12px}
+.footer-desc{font-size:13px;line-height:1.7;max-width:260px}
+.footer-col-title{
+  font-family:'Syne',sans-serif;
+  font-size:12px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  color:rgba(247,244,239,.4);margin-bottom:16px;
+}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:10px}
+.footer-links a{
+  font-size:13px;color:rgba(247,244,239,.6);
+  text-decoration:none;cursor:pointer;
+  transition:color .2s;
+}
+.footer-links a:hover{color:#f7f4ef}
+.footer-bottom{
+  max-width:1200px;margin:32px auto 0;
+  padding-top:24px;border-top:1px solid rgba(247,244,239,.1);
+  display:flex;justify-content:space-between;
+  font-family:'Syne',sans-serif;font-size:12px;
+  color:rgba(247,244,239,.35);
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;padding:40px 24px;gap:40px}
+  .hero-title{font-size:42px}
+  .hero-right{padding-left:0}
+  .stats-bar{gap:32px;padding:24px}
+  .stat-num{font-size:32px}
+  .section{padding:48px 24px 0}
+  nav{display:none}
+  .reminder-layout{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .footer-brand{grid-column:span 2}
+  .quiz-options{grid-template-columns:1fr}
+  .translate-body{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
+  .translate-pane:first-child{border-right:none;border-bottom:1px solid var(--border)}
+}
+@media(max-width:500px){
+  header{padding:0 16px}
+  .hero{padding:32px 16px}
+  .section{padding:36px 16px 0}
+  .stats-bar{flex-wrap:wrap;gap:20px;padding:24px 16px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    DilKampüsü
+  </div>
+  <nav>
+    <button class="nav-btn active" onclick="showPage('home',this)">Ana Sayfa</button>
+    <button class="nav-btn" onclick="showPage('teachers',this)">Hocalar</button>
+    <button class="nav-btn" onclick="showPage('videos',this)">Videolar</button>
+    <button class="nav-btn" onclick="showPage('translate',this)">Çevirici</button>
+    <button class="nav-btn" onclick="showPage('flashcards',this)">Kelime Kartları</button>
+    <button class="nav-btn" onclick="showPage('quiz',this)">Seviye Testi</button>
+    <button class="nav-btn" onclick="showPage('gallery',this)">Galeri</button>
+    <button class="nav-btn" onclick="showPage('reminders',this)">Hatırlatıcılar</button>
+  </nav>
+  <div class="header-actions">
+    <button class="btn-outline" onclick="showPage('quiz',document.querySelectorAll('.nav-btn')[5])">Seviyeni Bul</button>
+    <button class="btn-primary" onclick="showPage('reminders',document.querySelectorAll('.nav-btn')[7])">⏰ Hatırlatıcı</button>
+  </div>
+</header>
+
+<!-- ============ HOME PAGE ============ -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Dil Öğrenme Platformu</div>
+      <h1 class="hero-title">
+        Yeni bir dil,<br>
+        <span class="line2">yeni bir dünya.</span>
+      </h1>
+      <p class="hero-desc">
+        Uzman hocalarla bire bir ders al. Örnek videolarla pratik yap. Akıllı çevirici ve kelime kartlarıyla öğrenmeyi hızlandır.
+      </p>
+      <div class="hero-cta">
+        <button class="btn-primary" style="font-size:15px;padding:13px 28px" onclick="showPage('teachers',document.querySelectorAll('.nav-btn')[1])">Hoca Bul →</button>
+        <button class="btn-outline" style="font-size:15px;padding:12px 24px" onclick="showPage('quiz',document.querySelectorAll('.nav-btn')[5])">Seviye Testi Yap</button>
+      </div>
+      <div class="hero-note">✓ Ücretsiz deneme dersi · ✓ İptal garantisi · ✓ 7/24 destek</div>
+    </div>
+    <div class="hero-right" id="hero-lang-cards"></div>
+  </div>
+
+  <!-- Stats bar -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num">32</div>
+      <div class="stat-label">Uzman Hoca</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">280+</div>
+      <div class="stat-label">Örnek Video</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">8</div>
+      <div class="stat-label">Dil</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-students">12K+</div>
+      <div class="stat-label">Öğrenci</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-rem">0</div>
+      <div class="stat-label">Hatırlatıcı</div>
+    </div>
+  </div>
+
+  <!-- Featured teachers -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title-group">
+        <div class="section-label">Öne Çıkanlar</div>
+        <div class="section-title">Popüler Hocalar</div>
+      </div>
+      <button class="section-see-all" onclick="showPage('teachers',document.querySelectorAll('.nav-btn')[1])">Tümünü Gör →</button>
+    </div>
+    <div class="filter-tabs" id="home-lang-filter">
+      <button class="filter-tab active" onclick="filterHomeTeachers(this,'Tümü')">Tümü</button>
+      <button class="filter-tab" onclick="filterHomeTeachers(this,'İngilizce')">🇬🇧 İngilizce</button>
+      <button class="filter-tab" onclick="filterHomeTeachers(this,'İspanyolca')">🇪🇸 İspanyolca</button>
+      <button class="filter-tab" onclick="filterHomeTeachers(this,'Almanca')">🇩🇪 Almanca</button>
+      <button class="filter-tab" onclick="filterHomeTeachers(this,'Fransızca')">🇫🇷 Fransızca</button>
+      <button class="filter-tab" onclick="filterHomeTeachers(this,'Japonca')">🇯🇵 Japonca</button>
+    </div>
+    <div class="teachers-grid" id="home-teachers-grid"></div>
+  </div>
+
+  <!-- Featured videos -->
+  <div class="section" style="padding-bottom:0">
+    <div class="section-header">
+      <div class="section-title-group">
+        <div class="section-label">En Çok İzlenen</div>
+        <div class="section-title">Örnek Videolar</div>
+      </div>
+      <button class="section-see-all" onclick="showPage('videos',document.querySelectorAll('.nav-btn')[2])">Tümünü Gör →</button>
+    </div>
+    <div class="videos-grid" id="home-videos-grid"></div>
+  </div>
+</div>
+
+<!-- ============ TEACHERS PAGE ============ -->
+<div class="page" id="page-teachers">
+  <div class="section" style="padding-top:48px">
+    <div class="section-header">
+      <div class="section-title-group">
+        <div class="section-label">Ekibimiz</div>
+        <div class="section-title">Tüm Hocalar</div>
+      </div>
+    </div>
+    <div class="filter-tabs" id="all-teacher-filter">
+      <button class="filter-tab active" onclick="filterAllTeachers(this,'Tümü')">Tümü</button>
+      <button class="filter-tab" onclick="filterAllTeachers(this,'İngilizce')">🇬🇧 İngilizce</button>
+      <button class="filter-tab" onclick="filterAllTeachers(this,'İspanyolca')">🇪🇸 İspanyolca</button>
+      <button class="filter-tab" onclick="filterAllTeachers(this,'Almanca')">🇩🇪 Almanca</button>
+      <button class="filter-tab" onclick="filterAllTeachers(this,'Fransızca')">🇫🇷 Fransızca</button>
+      <button class="filter-tab" onclick="filterAllTeachers(this,'Japonca')">🇯🇵 Japonca</button>
+      <button class="filter-tab" onclick="filterAllTeachers(this,'Arapça')">🇸🇦 Arapça</button>
+      <button class="filter-tab" onclick="filterAllTeachers(this,'Çince')">🇨🇳 Çince</button>
+      <button class="filter-tab" onclick="filterAllTeachers(this,'İtalyanca')">🇮🇹 İtalyanca</button>
+    </div>
+    <div class="teachers-grid" id="all-teachers-grid"></div>
+  </div>
+</div>
+
+<!-- ============ VIDEOS PAGE ============ -->
+<div class="page" id="page-videos">
+  <div class="section" style="padding-top:48px">
+    <div class="section-header">
+      <div class="section-title-group">
+        <div class="section-label">Kütüphane</div>
+        <div class="section-title">Tüm Videolar</div>
+      </div>
+    </div>
+    <div class="filter-tabs" id="video-filter">
+      <button class="filter-tab active" onclick="filterVideos(this,'Tümü')">Tümü</button>
+      <button class="filter-tab" onclick="filterVideos(this,'Başlangıç')">Başlangıç</button>
+      <button class="filter-tab" onclick="filterVideos(this,'Orta')">Orta</button>
+      <button class="filter-tab" onclick="filterVideos(this,'İleri')">İleri</button>
+      <button class="filter-tab" onclick="filterVideos(this,'Konuşma')">Konuşma</button>
+      <button class="filter-tab" onclick="filterVideos(this,'Gramer')">Gramer</button>
+    </div>
+    <div class="videos-grid" id="all-videos-grid"></div>
+  </div>
+</div>
+
+<!-- ============ TRANSLATE PAGE ============ -->
+<div class="page" id="page-translate">
+  <div class="section" style="padding-top:48px">
+    <div class="section-header">
+      <div class="section-title-group">
+        <div class="section-label">Araçlar</div>
+        <div class="section-title">Anında Çevirici</div>
+      </div>
+    </div>
+    <div class="translate-box">
+      <div class="translate-header">
+        <select class="lang-select" id="from-lang">
+          <option value="tr">🇹🇷 Türkçe</option>
+          <option value="en">🇬🇧 İngilizce</option>
+          <option value="es">🇪🇸 İspanyolca</option>
+          <option value="de">🇩🇪 Almanca</option>
+          <option value="fr">🇫🇷 Fransızca</option>
+          <option value="ja">🇯🇵 Japonca</option>
+          <option value="ar">🇸🇦 Arapça</option>
+          <option value="zh">🇨🇳 Çince</option>
+          <option value="it">🇮🇹 İtalyanca</option>
+          <option value="pt">🇵🇹 Portekizce</option>
+          <option value="ru">🇷🇺 Rusça</option>
+          <option value="ko">🇰🇷 Korece</option>
+        </select>
+        <button class="swap-btn" onclick="swapLangs()" title="Dilleri Değiştir">⇄</button>
+        <select class="lang-select" id="to-lang">
+          <option value="en">🇬🇧 İngilizce</option>
+          <option value="tr">🇹🇷 Türkçe</option>
+          <option value="es">🇪🇸 İspanyolca</option>
+          <option value="de">🇩🇪 Almanca</option>
+          <option value="fr">🇫🇷 Fransızca</option>
+          <option value="ja">🇯🇵 Japonca</option>
+          <option value="ar">🇸🇦 Arapça</option>
+          <option value="zh">🇨🇳 Çince</option>
+          <option value="it">🇮🇹 İtalyanca</option>
+          <option value="pt">🇵🇹 Portekizce</option>
+          <option value="ru">🇷🇺 Rusça</option>
+          <option value="ko">🇰🇷 Korece</option>
+        </select>
+        <span style="margin-left:auto;font-size:12px">💡 Günlük ifadeleri dene</span>
+      </div>
+      <div class="translate-body">
+        <div class="translate-pane">
+          <textarea class="translate-textarea" id="translate-input" placeholder="Çevirmek istediğin metni buraya yaz...&#10;&#10;Örnek: Merhaba, nasılsın?"></textarea>
+        </div>
+        <div class="translate-pane">
+          <div class="translate-result" id="translate-output">Çeviri burada görünecek...</div>
+        </div>
+      </div>
+      <div class="translate-footer">
+        <div class="translate-footer-left" id="char-count">0 karakter</div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-outline" onclick="clearTranslate()">Temizle</button>
+          <button class="btn-translate" onclick="doTranslate()">Çevir ⚡</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Example phrases -->
+    <div style="margin-top:40px">
+      <div class="section-label" style="margin-bottom:16px">Günlük İfadeler</div>
+      <div class="translate-examples" id="phrase-examples"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FLASHCARDS PAGE ============ -->
+<div class="page" id="page-flashcards">
+  <div class="section" style="padding-top:48px">
+    <div class="section-header">
+      <div class="section-title-group">
+        <div class="section-label">Pratik</div>
+        <div class="section-title">Kelime Kartları</div>
+      </div>
+    </div>
+    <div class="flashcard-area">
+      <div class="filter-tabs" style="justify-content:center" id="fc-filter">
+        <button class="filter-tab active" onclick="loadFlashcards(this,'İngilizce')">🇬🇧 İngilizce</button>
+        <button class="filter-tab" onclick="loadFlashcards(this,'İspanyolca')">🇪🇸 İspanyolca</button>
+        <button class="filter-tab" onclick="loadFlashcards(this,'Almanca')">🇩🇪 Almanca</button>
+        <button class="filter-tab" onclick="loadFlashcards(this,'Fransızca')">🇫🇷 Fransızca</button>
+        <button class="filter-tab" onclick="loadFlashcards(this,'Japonca')">🇯🇵 Japonca</button>
+      </div>
+      <div class="flashcard-progress" id="fc-progress">Kart 1 / 10</div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="fc-prog-fill" style="width:10%"></div>
+      </div>
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="flashcard-inner" id="fc-inner">
+          <div class="flashcard-front">
+            <div class="fc-tag" id="fc-front-tag">İNGİLİZCE</div>
+            <div class="flashcard-word" id="fc-word">Hello</div>
+            <div class="flashcard-hint" id="fc-hint">Tıkla ve çeviriyi gör</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="fc-tag">TÜRKÇE</div>
+            <div class="flashcard-word" id="fc-translation">Merhaba</div>
+            <div class="flashcard-translation" id="fc-example">— Greetings, Hi!</div>
+          </div>
+        </div>
+      </div>
+      <div class="flashcard-nav">
+        <button class="fc-nav-btn wrong" onclick="fcAnswer(false)">✗ Bilmedim</button>
+        <button class="fc-nav-btn" onclick="flipCard()">🔄 Çevir</button>
+        <button class="fc-nav-btn correct" onclick="fcAnswer(true)">✓ Bildim</button>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:8px">
+        <button class="fc-nav-btn" onclick="fcPrev()">← Önceki</button>
+        <button class="fc-nav-btn" onclick="fcNext()">Sonraki →</button>
+      </div>
+      <div id="fc-score-display" style="text-align:center;font-family:'Syne',sans-serif;font-size:13px;color:var(--muted);margin-top:16px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ QUIZ PAGE ============ -->
+<div class="page" id="page-quiz">
+  <div class="section" style="padding-top:48px">
+    <div class="section-header">
+      <div class="section-title-group">
+        <div class="section-label">Test</div>
+        <div class="section-title">Seviye Testi</div>
+      </div>
+    </div>
+    <div class="quiz-box" id="quiz-container"></div>
+  </div>
+</div>
+
+<!-- ============ GALLERY PAGE ============ -->
+<div class="page" id="page-gallery">
+  <div class="section" style="padding-top:48px">
+    <div class="section-header">
+      <div class="section-title-group">
+        <div class="section-label">Kültür</div>
+        <div class="section-title">Dünya Galerisi</div>
+      </div>
+    </div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </div>
+</div>
+
+<!-- ============ REMINDERS PAGE ============ -->
+<div class="page" id="page-reminders">
+  <div class="section" style="padding-top:48px;padding-bottom:80px">
+    <div class="section-header">
+      <div class="section-title-group">
+        <div class="section-label">Planlama</div>
+        <div class="section-title">Ders Hatırlatıcıları</div>
+      </div>
+    </div>
+    <div class="reminder-layout">
+      <div class="reminder-form-box">
+        <div class="form-title">Yeni Hatırlatıcı</div>
+        <div class="form-group">
+          <label class="form-label">Ders Başlığı</label>
+          <input class="form-input" id="r-title" placeholder="ör: İngilizce konuşma pratiği" />
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Dil</label>
+            <select class="form-select" id="r-lang">
+              <option>🇬🇧 İngilizce</option>
+              <option>🇪🇸 İspanyolca</option>
+              <option>🇩🇪 Almanca</option>
+              <option>🇫🇷 Fransızca</option>
+              <option>🇯🇵 Japonca</option>
+              <option>🇸🇦 Arapça</option>
+              <option>🇨🇳 Çince</option>
+              <option>🇮🇹 İtalyanca</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ders Türü</label>
+            <select class="form-select" id="r-type">
+              <option>📖 Gramer</option>
+              <option>🗣 Konuşma Pratiği</option>
+              <option>✍️ Yazma</option>
+              <option>👂 Dinleme</option>
+              <option>📚 Kelime</option>
+              <option>📝 Sınav Hazırlık</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Tarih</label>
+            <input class="form-input" id="r-date" type="date" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Saat</label>
+            <input class="form-input" id="r-time" type="time" />
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Tekrar</label>
+            <select class="form-select" id="r-repeat">
+              <option value="once">Bir Kez</option>
+              <option value="daily">Her Gün</option>
+              <option value="weekly">Her Hafta</option>
+              <option value="weekdays">Hafta İçi</option>
+              <option value="weekend">Hafta Sonu</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Süre</label>
+            <select class="form-select" id="r-duration">
+              <option>30 dakika</option>
+              <option>45 dakika</option>
+              <option>60 dakika</option>
+              <option>90 dakika</option>
+              <option>2 saat</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Not (İsteğe Bağlı)</label>
+          <input class="form-input" id="r-note" placeholder="Ders notu..." />
+        </div>
+        <button class="btn-primary" style="width:100%;font-size:15px;padding:13px" onclick="addReminder()">+ Hatırlatıcı Ekle</button>
+      </div>
+      <div class="reminder-list-box">
+        <div id="upcoming-reminder"></div>
+        <div id="reminders-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="modal-overlay" id="video-modal" onclick="closeVideoModal(event)">
+  <div class="modal-box" style="position:relative">
+    <button class="modal-close" onclick="closeVideoModalBtn()">✕</button>
+    <div class="modal-video-area">
+      <div class="modal-emoji" id="modal-emoji">🎬</div>
+      <div class="mock-play-btn" onclick="showToast('Video oynatılıyor... ▶')">▶</div>
+      <div class="modal-video-title" id="modal-vtitle"></div>
+    </div>
+    <div class="modal-info">
+      <div class="modal-title" id="modal-title2"></div>
+      <div class="modal-desc" id="modal-desc2"></div>
+      <div class="modal-tags" id="modal-tags2"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo" style="margin-bottom:12px">
+        <div class="logo-dot"></div>DilKampüsü
+      </div>
+      <div class="footer-desc">Uzman hocalar, örnek videolar ve akıllı araçlarla dil öğrenmenin en kolay yolu.</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Platform</div>
+      <ul class="footer-links">
+        <li><a onclick="showPage('teachers',document.querySelectorAll('.nav-btn')[1])">Hocalar</a></li>
+        <li><a onclick="showPage('videos',document.querySelectorAll('.nav-btn')[2])">Videolar</a></li>
+        <li><a onclick="showPage('translate',document.querySelectorAll('.nav-btn')[3])">Çevirici</a></li>
+        <li><a onclick="showPage('flashcards',document.querySelectorAll('.nav-btn')[4])">Kelime Kartları</a></li>
+        <li><a onclick="showPage('quiz',document.querySelectorAll('.nav-btn')[5])">Seviye Testi</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Diller</div>
+      <ul class="footer-links">
+        <li><a>🇬🇧 İngilizce</a></li>
+        <li><a>🇪🇸 İspanyolca</a></li>
+        <li><a>🇩🇪 Almanca</a></li>
+        <li><a>🇫🇷 Fransızca</a></li>
+        <li><a>🇯🇵 Japonca</a></li>
+        <li><a>🇸🇦 Arapça</a></li>
+        <li><a>🇨🇳 Çince</a></li>
+        <li><a>🇮🇹 İtalyanca</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Destek</div>
+      <ul class="footer-links">
+        <li><a>SSS</a></li>
+        <li><a>Gizlilik</a></li>
+        <li><a>Kullanım Şartları</a></li>
+        <li><a>İletişim</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 DilKampüsü. Tüm hakları saklıdır.</span>
+    <span>🌍 Türkiye'den dünyaya</span>
+  </div>
+</footer>
+
+<script>
+// ============================
+// DATA
+// ============================
+const LANG_CARDS = [
+  {flag:'🇬🇧',name:'İngilizce',speakers:'1.5 Milyar Konuşmacı',level:90},
+  {flag:'🇪🇸',name:'İspanyolca',speakers:'500 Milyon Konuşmacı',level:75},
+  {flag:'🇩🇪',name:'Almanca',speakers:'135 Milyon Konuşmacı',level:60},
+  {flag:'🇫🇷',name:'Fransızca',speakers:'280 Milyon Konuşmacı',level:65},
+  {flag:'🇯🇵',name:'Japonca',speakers:'128 Milyon Konuşmacı',level:50},
+];
+
+const TEACHERS = [
+  {name:'Sarah Johnson',emoji:'👩‍🏫',lang:'İngilizce',flag:'🇬🇧',origin:'Londra, İngiltere',badge:'Çok Tercih Edilen',badgeClass:'',bio:'Oxford mezunu, 12 yıllık deneyim. IELTS/TOEFL hazırlık uzmanı. Telaffuz ve iş İngilizcesi odaklı.',rating:4.9,reviews:248,students:1840,lessons:3200,price:'₺350',langs:['İngilizce','IELTS','Business English'],available:true},
+  {name:'Carlos Mendez',emoji:'🧑‍💼',lang:'İspanyolca',flag:'🇪🇸',origin:'Madrid, İspanya',badge:'Popüler',badgeClass:'',bio:'Madrid Üniversitesi mezunu. Akıcı konuşma ve Latince-Amerika lehçeleri konusunda uzman.',rating:4.8,reviews:192,students:1420,lessons:2800,price:'₺320',langs:['İspanyolca','DELE'],available:true},
+  {name:'Lena Müller',emoji:'👩‍💼',lang:'Almanca',flag:'🇩🇪',origin:'Berlin, Almanya',badge:'',badgeClass:'',bio:'Berliner aksan. A1\'den C2\'ye kadar. Goethe-Zertifikat sınav hazırlığı. Almanya\'ya göç sürecine destek.',rating:4.7,reviews:134,students:980,lessons:1900,price:'₺300',langs:['Almanca','Goethe','TestDaF'],available:false},
+  {name:'Pierre Dubois',emoji:'👨‍🎨',lang:'Fransızca',flag:'🇫🇷',origin:'Paris, Fransa',badge:'Yeni',badgeClass:'green',bio:'Sorbonne mezunu edebiyatçı. DELF/DALF hazırlık, kültürel immersion dersleri. Sinema ve edebiyat entegrasyonu.',rating:4.9,reviews:87,students:640,lessons:1100,price:'₺330',langs:['Fransızca','DELF','DALF'],available:true},
+  {name:'Yuki Tanaka',emoji:'👩‍🎓',lang:'Japonca',flag:'🇯🇵',origin:'Tokyo, Japonya',badge:'En İyi',badgeClass:'',bio:'Tokyo Üniversitesi Dilbilim bölümü. JLPT tüm seviyeleri. Hiragana, Katakana, Kanji ve Keigo.',rating:5.0,reviews:156,students:1100,lessons:2100,price:'₺380',langs:['Japonca','JLPT','Kanji'],available:true},
+  {name:'Fatima Al-Hassan',emoji:'👩‍🏫',lang:'Arapça',flag:'🇸🇦',origin:'Riyad, S. Arabistan',badge:'',badgeClass:'',bio:'Fusha ve Amiyye Arapçası. Kuran okuma ve tajwid dahil. Orta Doğu kültürü ve iş dünyası.',rating:4.8,reviews:143,students:1050,lessons:1800,price:'₺310',langs:['Arapça','Kuran','Fusha'],available:true},
+  {name:'James Carter',emoji:'🧑‍💻',lang:'İngilizce',flag:'🇺🇸',origin:'New York, ABD',badge:'',badgeClass:'',bio:'Wall Street deneyimli iş dünyası İngilizcesi uzmanı. Sunum becerileri, müzakere dili, e-posta yazımı.',rating:4.6,reviews:98,students:780,lessons:1450,price:'₺370',langs:['Business English','Sunum','Müzakere'],available:false},
+  {name:'Li Wei',emoji:'👨‍🎓',lang:'Çince',flag:'🇨🇳',origin:'Şangay, Çin',badge:'',badgeClass:'blue',bio:'Mandarin Çincesi, Pinyin ve ton sistemi. HSK 1-6 sınav hazırlığı. Çin iş kültürü dersleri.',rating:4.8,reviews:112,students:830,lessons:1600,price:'₺340',langs:['Çince','HSK','Pinyin'],available:true},
+  {name:'Maria Rossi',emoji:'👩‍🎤',lang:'İtalyanca',flag:'🇮🇹',origin:'Roma, İtalya',badge:'Yeni',badgeClass:'green',bio:'La Sapienza mezunu. İtalyanca konuşma, opera ve müzik İtalyancası. Yemek ve kültür odaklı eğlenceli dersler.',rating:4.7,reviews:61,students:450,lessons:820,price:'₺290',langs:['İtalyanca','CELI','Konuşma'],available:true},
+  {name:'Alex Thompson',emoji:'🧑‍🏫',lang:'İngilizce',flag:'🇬🇧',origin:'Edinburgh, İskoçya',badge:'',badgeClass:'',bio:'Çocuklar ve gençler için İngilizce uzmanı. Cambridge YLE, KET, PET hazırlık. Oyun tabanlı öğrenme.',rating:4.8,reviews:176,students:1290,lessons:2400,price:'₺280',langs:['Çocuk İng.','Cambridge','YLE'],available:true},
+  {name:'Sofia García',emoji:'👩‍💻',lang:'İspanyolca',flag:'🇲🇽',origin:'Meksiko, Meksika',badge:'',badgeClass:'',bio:'Meksika ve Latin Amerika lehçesi. Teknoloji ve iş İspanyolcası. DELE sınav koçluğu.',rating:4.6,reviews:89,students:670,lessons:1200,price:'₺295',langs:['İspanyolca','DELE','Latam'],available:false},
+  {name:'Hans Becker',emoji:'👨‍🔬',lang:'Almanca',flag:'🇩🇪',origin:'Münih, Almanya',badge:'',badgeClass:'',bio:'Teknik ve akademik Almanca. Mühendisler ve tıp öğrencileri için özel müfredat. TestDaF / DSH hazırlık.',rating:4.5,reviews:72,students:540,lessons:950,price:'₺315',langs:['Almanca','TestDaF','Teknik'],available:true},
+  {name:'Amélie Laurent',emoji:'👩‍🏫',lang:'Fransızca',flag:'🇫🇷',origin:'Lyon, Fransa',badge:'',badgeClass:'',bio:'Fransız kültürü ve yaşam tarzı odaklı dersler. TCF/TEF hazırlık. Yetişkin öğrenciler için.',rating:4.7,reviews:94,students:700,lessons:1300,price:'₺305',langs:['Fransızca','TCF','Kültür'],available:true},
+  {name:'Kenji Yamamoto',emoji:'👨‍🎌',lang:'Japonca',flag:'🇯🇵',origin:'Osaka, Japonya',badge:'',badgeClass:'',bio:'Anime, manga ve pop kültürü yoluyla Japonca. Genç öğrenciler için ideal. JLPT N5-N3 hazırlık.',rating:4.9,reviews:201,students:1600,lessons:2700,price:'₺360',langs:['Japonca','JLPT','Anime Dili'],available:true},
+  {name:'Aisha Mohammed',emoji:'👩‍🎓',lang:'Arapça',flag:'🇦🇪',origin:'Dubai, BAE',badge:'',badgeClass:'blue',bio:'Modern Standart Arapça ve Körfez lehçesi. İş Arapçası, diplomatik dil ve medya Arapçası.',rating:4.8,reviews:108,students:810,lessons:1500,price:'₺325',langs:['Arapça','İş Arapçası','Körfez'],available:false},
+  {name:'Emily Chen',emoji:'👩‍🏫',lang:'Çince',flag:'🇹🇼',origin:'Taipei, Tayvan',badge:'Popüler',badgeClass:'',bio:'Geleneksel ve Basitleştirilmiş Çince. Konuşma pratiği, okuma yazma. Çay kültürü ve tarihi.',rating:4.7,reviews:132,students:980,lessons:1800,price:'₺345',langs:['Çince','Trad. Çince','Kültür'],available:true},
+];
+
+const VIDEOS = [
+  {title:'A1 İngilizce: Selamlaşma ve Tanışma',emoji:'🎬',lang:'İngilizce',flag:'🇬🇧',level:'Başlangıç',category:'Konuşma',duration:'12 dk',views:'4.2M',desc:'Temel selamlaşma ifadeleri, Hello/Hi/Good morning farkları ve kendini tanıtma cümleleri.'},
+  {title:'İspanyolca Sayılar ve Renkler',emoji:'🔢',lang:'İspanyolca',flag:'🇪🇸',level:'Başlangıç',category:'Gramer',duration:'10 dk',views:'3.1M',desc:'1\'den 1000\'e kadar sayılar, renkler ve onları günlük hayatta kullanma.'},
+  {title:'Almanca Fiil Çekimi: Präsens',emoji:'🇩🇪',lang:'Almanca',flag:'🇩🇪',level:'Orta',category:'Gramer',duration:'18 dk',views:'1.8M',desc:'Şimdiki zaman çekimi, düzenli/düzensiz fiiller ve sık kullanılan kalıplar.'},
+  {title:'Fransızca Telaffuz: Gizli Sırlar',emoji:'🗼',lang:'Fransızca',flag:'🇫🇷',level:'Başlangıç',category:'Konuşma',duration:'15 dk',views:'2.9M',desc:'Nazal sesler, gırtlak R\'si ve Fransızca\'da okunmayan harflerin tamamı.'},
+  {title:'Japonca Hiragana Tam Rehber',emoji:'⛩️',lang:'Japonca',flag:'🇯🇵',level:'Başlangıç',category:'Gramer',duration:'25 dk',views:'5.4M',desc:'46 Hiragana karakterini ezber teknikleriyle 30 dakikada öğren.'},
+  {title:'İngilizce If Clauses Tam Anlatım',emoji:'📚',lang:'İngilizce',flag:'🇬🇧',level:'İleri',category:'Gramer',duration:'22 dk',views:'2.6M',desc:'0,1,2,3. tip koşul cümleleri — mixed conditionals dahil tam rehber.'},
+  {title:'Arapça Alfabe: 28 Harf',emoji:'🕌',lang:'Arapça',flag:'🇸🇦',level:'Başlangıç',category:'Gramer',duration:'28 dk',views:'3.7M',desc:'28 Arapça harfi doğru yazım, okunum ve birleştirme kurallarıyla öğren.'},
+  {title:'Çince 4 Ton Sistemi',emoji:'🐉',lang:'Çince',flag:'🇨🇳',level:'Başlangıç',category:'Konuşma',duration:'16 dk',views:'2.1M',desc:'Pinyin ve 4 ton. Ton hatası yapmamak için pratik egzersizler.'},
+  {title:'İspanyolca Restoranda Konuşma',emoji:'🍽️',lang:'İspanyolca',flag:'🇪🇸',level:'Orta',category:'Konuşma',duration:'14 dk',views:'1.9M',desc:'Rezervasyon, sipariş, şikayet ve hesap isteme kalıpları.'},
+  {title:'Almanca Prepositions: Dativ/Akkusativ',emoji:'📐',lang:'Almanca',flag:'🇩🇪',level:'İleri',category:'Gramer',duration:'20 dk',views:'1.4M',desc:'An, auf, in, unter vb. edatların duruma göre kullanımı.'},
+  {title:'Fransızca Passé Composé',emoji:'⏳',lang:'Fransızca',flag:'🇫🇷',level:'Orta',category:'Gramer',duration:'17 dk',views:'2.2M',desc:'Geçmiş zaman kipi, avoir/être seçimi ve düzensiz fiiller.'},
+  {title:'Japonca: Alışverişte Konuşma',emoji:'🛍️',lang:'Japonca',flag:'🇯🇵',level:'Orta',category:'Konuşma',duration:'13 dk',views:'1.6M',desc:'Fiyat sorma, pazarlık ve teşekkür kalıpları Japonca\'da.'},
+  {title:'İngilizce Phrasal Verbs Top 50',emoji:'⚡',lang:'İngilizce',flag:'🇬🇧',level:'Orta',category:'Gramer',duration:'30 dk',views:'4.8M',desc:'En çok kullanılan 50 phrasal verb, örnek cümleler ve alıştırmalar.'},
+  {title:'İtalyanca: Temel İfadeler',emoji:'🍕',lang:'İtalyanca',flag:'🇮🇹',level:'Başlangıç',category:'Konuşma',duration:'11 dk',views:'1.3M',desc:'Ciao, grazie, prego ve 50 temel İtalyanca ifade. İtalya\'ya hazırlan!'},
+  {title:'Arapça: Günlük Konuşma Kalıpları',emoji:'☪️',lang:'Arapça',flag:'🇸🇦',level:'Orta',category:'Konuşma',duration:'19 dk',views:'2.4M',desc:'Selamlaşma, sohbet başlatma ve nazik ifadeler — Amiyye Arapçası.'},
+  {title:'Çince: Yiyecek ve Restoran',emoji:'🥢',lang:'Çince',flag:'🇨🇳',level:'Orta',category:'Konuşma',duration:'15 dk',views:'1.7M',desc:'Çince menü okuma, sipariş verme ve yemek isimleri.'},
+];
+
+const FLASHCARD_DATA = {
+  'İngilizce': [
+    {word:'Apple',tr:'Elma',example:'An apple a day keeps the doctor away.'},
+    {word:'Beautiful',tr:'Güzel',example:'What a beautiful day!'},
+    {word:'Friendship',tr:'Arkadaşlık',example:'Friendship is the best gift.'},
+    {word:'Journey',tr:'Yolculuk',example:'Life is a journey, not a destination.'},
+    {word:'Knowledge',tr:'Bilgi / Bilgi',example:'Knowledge is power.'},
+    {word:'Mountain',tr:'Dağ',example:'I love hiking in the mountains.'},
+    {word:'Ocean',tr:'Okyanus',example:'The ocean is vast and mysterious.'},
+    {word:'Patience',tr:'Sabır',example:'Patience is a virtue.'},
+    {word:'Silence',tr:'Sessizlik',example:'Enjoy the silence of nature.'},
+    {word:'Wisdom',tr:'Bilgelik',example:'Age brings wisdom.'},
+  ],
+  'İspanyolca': [
+    {word:'Hola',tr:'Merhaba',example:'¡Hola! ¿Cómo estás?'},
+    {word:'Amor',tr:'Aşk',example:'El amor es eterno.'},
+    {word:'Cielo',tr:'Gökyüzü',example:'El cielo es azul.'},
+    {word:'Corazón',tr:'Kalp',example:'Te doy mi corazón.'},
+    {word:'Familia',tr:'Aile',example:'La familia es lo más importante.'},
+    {word:'Gracias',tr:'Teşekkürler',example:'Muchas gracias, señor.'},
+    {word:'Libro',tr:'Kitap',example:'Me gusta leer libros.'},
+    {word:'Noche',tr:'Gece',example:'Buenas noches, amigos.'},
+    {word:'Sueño',tr:'Rüya / Uyku',example:'Tengo un sueño.'},
+    {word:'Vida',tr:'Hayat',example:'La vida es bella.'},
+  ],
+  'Almanca': [
+    {word:'Danke',tr:'Teşekkür ederim',example:'Danke schön für Ihre Hilfe.'},
+    {word:'Freiheit',tr:'Özgürlük',example:'Freiheit ist ein Grundrecht.'},
+    {word:'Gemütlich',tr:'Rahat / Huzurlu',example:'Unsere Wohnung ist sehr gemütlich.'},
+    {word:'Heimweh',tr:'Yurt özlemi',example:'Ich habe Heimweh nach Deutschland.'},
+    {word:'Kindergarten',tr:'Anaokulu',example:'Mein Kind geht in den Kindergarten.'},
+    {word:'Lebenslauf',tr:'CV / Özgeçmiş',example:'Ich schreibe meinen Lebenslauf.'},
+    {word:'Mitternacht',tr:'Gece yarısı',example:'Es ist schon Mitternacht.'},
+    {word:'Reise',tr:'Seyahat',example:'Die Reise war wunderbar.'},
+    {word:'Schadenfreude',tr:'Başkasının acısından sevinç',example:'Schadenfreude ist keine schöne Eigenschaft.'},
+    {word:'Zukunft',tr:'Gelecek',example:'Die Zukunft gehört uns.'},
+  ],
+  'Fransızca': [
+    {word:'Bonjour',tr:'Günaydın / Merhaba',example:'Bonjour, comment allez-vous?'},
+    {word:'Amour',tr:'Aşk',example:'L\'amour est dans l\'air.'},
+    {word:'Bonheur',tr:'Mutluluk',example:'Le bonheur est simple.'},
+    {word:'Château',tr:'Şato / Kale',example:'Le château est magnifique.'},
+    {word:'Déjeuner',tr:'Öğle yemeği',example:'J\'adore le déjeuner en famille.'},
+    {word:'Étoile',tr:'Yıldız',example:'Les étoiles brillent la nuit.'},
+    {word:'Fleur',tr:'Çiçek',example:'Cette fleur est très belle.'},
+    {word:'Liberté',tr:'Özgürlük',example:'Liberté, égalité, fraternité.'},
+    {word:'Merci',tr:'Teşekkürler',example:'Merci beaucoup!'},
+    {word:'Soleil',tr:'Güneş',example:'Le soleil brille aujourd\'hui.'},
+  ],
+  'Japonca': [
+    {word:'ありがとう',tr:'Teşekkür ederim (Arigatou)',example:'ありがとうございます。'},
+    {word:'桜 (Sakura)',tr:'Kiraz çiçeği',example:'桜はきれいです。'},
+    {word:'食べる (Taberu)',tr:'Yemek',example:'ラーメンを食べる。'},
+    {word:'友達 (Tomodachi)',tr:'Arkadaş',example:'友達は大切です。'},
+    {word:'夢 (Yume)',tr:'Rüya / Hayal',example:'大きな夢があります。'},
+    {word:'空 (Sora)',tr:'Gökyüzü',example:'空は青い。'},
+    {word:'愛 (Ai)',tr:'Aşk / Sevgi',example:'愛しています。'},
+    {word:'日本語 (Nihongo)',tr:'Japonca',example:'日本語を勉強する。'},
+    {word:'元気 (Genki)',tr:'Enerjik / İyi',example:'お元気ですか？'},
+    {word:'山 (Yama)',tr:'Dağ',example:'富士山は高い。'},
+  ],
+};
+
+const QUIZ_QUESTIONS = [
+  {q:'Which sentence is grammatically correct?',opts:['He go to school every day.','He goes to school every day.','He going to school every day.','He gone to school every day.'],ans:1,lang:'İngilizce'},
+  {q:'"Ich habe Hunger" ne anlama gelir?',opts:['Ben yorgunum.','Ben mutluyum.','Acıktım.','Susadım.'],ans:2,lang:'Almanca'},
+  {q:'"¿Cómo te llamas?" sorusunun doğru yanıtı hangisidir?',opts:['Tengo 25 años.','Me llamo Carlos.','Estoy bien, gracias.','Vivo en Madrid.'],ans:1,lang:'İspanyolca'},
+  {q:'Fransızcada "Je voudrais un café" ne demektir?',opts:['Kahvemi içtim.','Kahve istemiyorum.','Bir kahve istiyorum.','Kahve nerede?'],ans:2,lang:'Fransızca'},
+  {q:'Which is the correct Past Simple form?',opts:['I goed to Paris last year.','I go to Paris last year.','I went to Paris last year.','I gone to Paris last year.'],ans:2,lang:'İngilizce'},
+  {q:'Japonca\'da "こんにちは" ne anlama gelir?',opts:['İyi geceler','Günaydın','Merhaba (gündüz)','Görüşürüz'],ans:2,lang:'Japonca'},
+  {q:'"Der, die, das" hangi dilin özelliğidir?',opts:['Fransızca','Almanca','Hollandaca','İsveççe'],ans:1,lang:'Genel'},
+  {q:'"Grazie" hangi dilde teşekkür anlamına gelir?',opts:['Fransızca','İspanyolca','İtalyanca','Portekizce'],ans:2,lang:'Genel'},
+  {q:'Which modal verb expresses obligation?',opts:['Can','Should','Must','Would'],ans:2,lang:'İngilizce'},
+  {q:'Arapçada "شكراً" ne demektir?',opts:['Merhaba','Teşekkürler','Güle güle','Evet'],ans:1,lang:'Arapça'},
+];
+
+const PHRASES = [
+  {orig:'Merhaba, nasılsın?',trans:'Hello, how are you?',lang:'İngilizce'},
+  {orig:'Günaydın!',trans:'¡Buenos días!',lang:'İspanyolca'},
+  {orig:'Teşekkür ederim.',trans:'Merci beaucoup.',lang:'Fransızca'},
+  {orig:'Nerede?',trans:'Wo ist...?',lang:'Almanca'},
+  {orig:'Sizi seviyorum.',trans:'Aishiteru. (愛してる)',lang:'Japonca'},
+  {orig:'İyi geceler.',trans:'Buenas noches.',lang:'İspanyolca'},
+  {orig:'Anlamıyorum.',trans:'I don\'t understand.',lang:'İngilizce'},
+  {orig:'Ne kadar?',trans:'Combien ça coûte?',lang:'Fransızca'},
+  {orig:'Yardım edin!',trans:'Hilfe! (Hilfe bitte)',lang:'Almanca'},
+  {orig:'Çok güzel!',trans:'Très beau / belle!',lang:'Fransızca'},
+  {orig:'Özür dilerim.',trans:'Mi dispiace.',lang:'İtalyanca'},
+  {orig:'Tebrikler!',trans:'Congratulations!',lang:'İngilizce'},
+];
+
+const GALLERY = [
+  {emoji:'🗼',label:'Paris',sub:'Fransız kültürü'},{emoji:'🗽',label:'New York',sub:'Amerikan kültürü'},
+  {emoji:'⛩️',label:'Tokyo',sub:'Japon kültürü'},{emoji:'🏰',label:'Londra',sub:'İngiliz kültürü'},
+  {emoji:'🏯',label:'Kyoto',sub:'Eski Japonya'},{emoji:'🎭',label:'Barselona',sub:'Katalan kültürü'},
+  {emoji:'🕌',label:'Dubai',sub:'Arap kültürü'},{emoji:'🏟️',label:'Roma',sub:'İtalyan kültürü'},
+  {emoji:'🎎',label:'Japonya',sub:'Gelenek'},{emoji:'🥐',label:'Fransa',sub:'Gastronomi'},
+  {emoji:'🍕',label:'Napoli',sub:'İtalyan mutfağı'},{emoji:'⚽',label:'Madrid',sub:'Futbol kültürü'},
+  {emoji:'🥨',label:'Münih',sub:'Bavyera kültürü'},{emoji:'☕',label:'İngiltere',sub:'Çay kültürü'},
+  {emoji:'🌮',label:'Meksika',sub:'Latam kültürü'},{emoji:'🐉',label:'Çin',sub:'Kadim kültür'},
+  {emoji:'🎻',label:'Viyana',sub:'Klasik müzik'},{emoji:'🌺',label:'Bali',sub:'Endonezya'},
+  {emoji:'🦁',label:'Nairobi',sub:'Afrika'},{emoji:'🧉',label:'Buenos Aires',sub:'Arjantin'},
+  {emoji:'🫖',label:'Kahire',sub:'Mısır kültürü'},{emoji:'🎿',label:'Oslo',sub:'İskandinav kültürü'},
+  {emoji:'🌊',label:'Lizbon',sub:'Portekiz kültürü'},{emoji:'🫕',label:'Marakeş',sub:'Fas kültürü'},
+];
+
+// ============================
+// STATE
+// ============================
+let reminders = JSON.parse(localStorage.getItem('dk-reminders')||'[]');
+let fcIndex = 0;
+let fcLang = 'İngilizce';
+let fcCorrect = 0;
+let fcWrong = 0;
+let fcFlipped = false;
+let quizIndex = 0;
+let quizScore = 0;
+let quizAnswered = false;
+
+// ============================
+// INIT
+// ============================
+function init(){
+  renderHeroLangCards();
+  renderHomeTeachers('Tümü');
+  renderHomeVideos();
+  renderAllTeachers('Tümü');
+  renderAllVideos('Tümü');
+  renderPhraseExamples();
+  renderGallery();
+  renderReminders();
+  loadFlashcards(document.querySelector('#fc-filter .filter-tab'),'İngilizce');
+  renderQuiz();
+  updateStatReminder();
+
+  // Set today's date/time in form
+  const now = new Date();
+  const d = document.getElementById('r-date');
+  const t = document.getElementById('r-time');
+  if(d) d.value = now.toISOString().split('T')[0];
+  if(t) t.value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  // char counter
+  const inp = document.getElementById('translate-input');
+  if(inp) inp.addEventListener('input',()=>{
+    document.getElementById('char-count').textContent = inp.value.length + ' karakter';
+  });
+}
+
+// ============================
+// PAGE NAV
+// ============================
+function showPage(id, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ============================
+// HERO LANG CARDS
+// ============================
+function renderHeroLangCards(){
+  const el = document.getElementById('hero-lang-cards');
+  el.innerHTML = LANG_CARDS.slice(0,5).map(l=>`
+    <div class="lang-card" onclick="showPage('teachers',document.querySelectorAll('.nav-btn')[1])">
+      <div class="lang-card-left">
+        <div class="lang-flag">${l.flag}</div>
+        <div>
+          <div class="lang-name">${l.name}</div>
+          <div class="lang-speakers">${l.speakers}</div>
+        </div>
+      </div>
+      <div class="lang-card-right">
+        <div class="lang-level-bar"><div class="lang-level-fill" style="width:${l.level}%"></div></div>
+        <div class="lang-arrow">→</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============================
+// TEACHER CARDS
+// ============================
+function teacherCardHTML(t){
+  return `<div class="teacher-card">
+    <div class="teacher-card-top">
+      <div class="teacher-avatar">${t.emoji}</div>
+      <div class="teacher-header-info">
+        ${t.badge?`<div class="teacher-badge ${t.badgeClass}">${t.badge}</div>`:''}
+        <div class="teacher-name">${t.name}</div>
+        <div class="teacher-origin">${t.flag} ${t.origin}</div>
+      </div>
+    </div>
+    <div class="teacher-body">
+      <div class="teacher-langs">${t.langs.map(l=>`<span class="t-lang-tag">${l}</span>`).join('')}</div>
+      <div class="teacher-bio">${t.bio}</div>
+      <div class="teacher-stats">
+        <div class="t-stat"><div class="t-stat-val">${t.students.toLocaleString('tr')}</div><div class="t-stat-key">Öğrenci</div></div>
+        <div class="t-stat"><div class="t-stat-val">${t.lessons.toLocaleString('tr')}</div><div class="t-stat-key">Ders</div></div>
+        <div class="t-stat"><div class="t-stat-val">${t.price}</div><div class="t-stat-key">/ saat</div></div>
+      </div>
+      <div class="stars-row">
+        <span class="stars">${'★'.repeat(Math.floor(t.rating))}${t.rating%1>=.5?'½':''}</span>
+        <span class="rating-val">${t.rating}</span>
+        <span class="reviews-count">(${t.reviews} yorum)</span>
+      </div>
+      <div class="price-row">
+        <div class="availability">
+          <div class="avail-dot" style="background:${t.available?'var(--accent2)':'#ccc'}"></div>
+          ${t.available?'Müsait':'Meşgul'}
+        </div>
+      </div>
+      <button class="btn-book" onclick="showToast('${t.name} ile ders rezervasyonu oluşturuldu! 🎉')">Ders Rezervasyonu Yap</button>
+    </div>
+  </div>`;
+}
+
+function renderHomeTeachers(filter){
+  const list = filter==='Tümü' ? TEACHERS.slice(0,8) : TEACHERS.filter(t=>t.lang===filter).slice(0,8);
+  document.getElementById('home-teachers-grid').innerHTML = list.map(teacherCardHTML).join('');
+}
+function renderAllTeachers(filter){
+  const list = filter==='Tümü' ? TEACHERS : TEACHERS.filter(t=>t.lang===filter);
+  document.getElementById('all-teachers-grid').innerHTML = list.map(teacherCardHTML).join('');
+}
+function filterHomeTeachers(btn,lang){
+  document.querySelectorAll('#home-lang-filter .filter-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderHomeTeachers(lang);
+}
+function filterAllTeachers(btn,lang){
+  document.querySelectorAll('#all-teacher-filter .filter-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAllTeachers(lang);
+}
+
+// ============================
+// VIDEO CARDS
+// ============================
+function videoCardHTML(v,i){
+  return `<div class="video-card" onclick="openVideoModal(${i})">
+    <div class="video-thumb">
+      <span style="font-size:60px">${v.emoji}</span>
+      <div class="video-overlay"><div class="play-circle">▶</div></div>
+      <div class="vid-top-tags">
+        <span class="vid-lang-badge">${v.flag} ${v.lang}</span>
+        <span class="vid-level-badge">${v.level}</span>
+      </div>
+      <span class="vid-duration">${v.duration}</span>
+    </div>
+    <div class="video-info">
+      <div class="video-title">${v.title}</div>
+      <div class="video-desc">${v.desc}</div>
+      <div class="video-meta">
+        <span>👁 ${v.views}</span>
+        <span>📂 ${v.category}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderHomeVideos(){
+  document.getElementById('home-videos-grid').innerHTML = VIDEOS.slice(0,6).map((v,i)=>videoCardHTML(v,i)).join('');
+}
+function renderAllVideos(filter){
+  const list = filter==='Tümü'?VIDEOS:VIDEOS.filter(v=>v.level===filter||v.category===filter);
+  document.getElementById('all-videos-grid').innerHTML = list.map((v,i)=>videoCardHTML(v,VIDEOS.indexOf(v))).join('');
+}
+function filterVideos(btn,filter){
+  document.querySelectorAll('#video-filter .filter-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAllVideos(filter);
+}
+
+// ============================
+// VIDEO MODAL
+// ============================
+function openVideoModal(i){
+  const v = VIDEOS[i];
+  document.getElementById('modal-emoji').textContent = v.emoji;
+  document.getElementById('modal-vtitle').textContent = v.title;
+  document.getElementById('modal-title2').textContent = v.title;
+  document.getElementById('modal-desc2').textContent = v.desc;
+  document.getElementById('modal-tags2').innerHTML = [v.lang,v.level,v.category,v.duration,`${v.views} izlenme`].map(t=>`<span class="modal-tag">${t}</span>`).join('');
+  document.getElementById('video-modal').classList.add('open');
+}
+function closeVideoModal(e){if(e.target.id==='video-modal')document.getElementById('video-modal').classList.remove('open')}
+function closeVideoModalBtn(){document.getElementById('video-modal').classList.remove('open')}
+
+// ============================
+// TRANSLATE
+// ============================
+const DICT = {
+  'merhaba':{'en':'Hello','es':'Hola','de':'Hallo','fr':'Bonjour','ja':'こんにちは','ar':'مرحباً','zh':'你好','it':'Ciao','pt':'Olá','ru':'Привет','ko':'안녕하세요'},
+  'teşekkür ederim':{'en':'Thank you','es':'Gracias','de':'Danke','fr':'Merci','ja':'ありがとう','ar':'شكراً','zh':'谢谢','it':'Grazie','pt':'Obrigado','ru':'Спасибо','ko':'감사합니다'},
+  'nasılsın':{'en':'How are you?','es':'¿Cómo estás?','de':'Wie geht es Ihnen?','fr':'Comment allez-vous?','ja':'お元気ですか','ar':'كيف حالك','zh':'你好吗','it':'Come stai?','pt':'Como vai?','ru':'Как дела?','ko':'어떻게 지내세요?'},
+  'iyi günler':{'en':'Good day','es':'Buenos días','de':'Guten Tag','fr':'Bonne journée','ja':'よい一日を','ar':'يوم سعيد','zh':'美好的一天','it':'Buona giornata','pt':'Bom dia','ru':'Хорошего дня','ko':'좋은 하루 되세요'},
+  'evet':{'en':'Yes','es':'Sí','de':'Ja','fr':'Oui','ja':'はい','ar':'نعم','zh':'是的','it':'Sì','pt':'Sim','ru':'Да','ko':'네'},
+  'hayır':{'en':'No','es':'No','de':'Nein','fr':'Non','ja':'いいえ','ar':'لا','zh':'不','it':'No','pt':'Não','ru':'Нет','ko':'아니요'},
+  'güzel':{'en':'Beautiful / Nice','es':'Hermoso','de':'Schön','fr':'Beau / Belle','ja':'きれい','ar':'جميل','zh':'美丽','it':'Bello','pt':'Bonito','ru':'Красивый','ko':'아름다워요'},
+  'seviyorum':{'en':'I love (you)','es':'Te quiero','de':'Ich liebe (dich)','fr':'Je t\'aime','ja':'愛してる','ar':'أحبك','zh':'我爱你','it':'Ti amo','pt':'Eu te amo','ru':'Я тебя люблю','ko':'사랑해요'},
+  'su':{'en':'Water','es':'Agua','de':'Wasser','fr':'Eau','ja':'水 (Mizu)','ar':'ماء','zh':'水','it':'Acqua','pt':'Água','ru':'Вода','ko':'물'},
+  'yemek':{'en':'Food','es':'Comida','de':'Essen','fr':'Nourriture','ja':'食べ物 (Tabemono)','ar':'طعام','zh':'食物','it':'Cibo','pt':'Comida','ru':'Еда','ko':'음식'},
+  'hello':{'tr':'Merhaba','es':'Hola','de':'Hallo','fr':'Bonjour','ja':'こんにちは','ar':'مرحباً','zh':'你好','it':'Ciao'},
+  'thank you':{'tr':'Teşekkür ederim','es':'Gracias','de':'Danke','fr':'Merci','ja':'ありがとう','ar':'شكراً','zh':'谢谢'},
+  'yes':{'tr':'Evet','es':'Sí','de':'Ja','fr':'Oui','ja':'はい','ar':'نعم','zh':'是'},
+  'no':{'tr':'Hayır','es':'No','de':'Nein','fr':'Non','ja':'いいえ','ar':'لا','zh':'不'},
+};
+
+function doTranslate(){
+  const inp = document.getElementById('translate-input').value.trim().toLowerCase();
+  const toLang = document.getElementById('to-lang').value;
+  const out = document.getElementById('translate-output');
+  if(!inp){out.textContent='Lütfen bir metin girin.';return;}
+  
+  // Check dictionary
+  for(const key of Object.keys(DICT)){
+    if(inp===key || inp.includes(key)){
+      if(DICT[key][toLang]){
+        out.textContent = DICT[key][toLang];
+        out.style.color='var(--ink)';
+        showToast('✓ Çeviri tamamlandı!');
+        return;
+      }
+    }
+  }
+  // Fallback
+  const langNames={en:'İngilizce',es:'İspanyolca',de:'Almanca',fr:'Fransızca',ja:'Japonca',ar:'Arapça',zh:'Çince',it:'İtalyanca',pt:'Portekizce',ru:'Rusça',ko:'Korece',tr:'Türkçe'};
+  out.style.color='var(--muted)';
+  out.textContent = `"${inp}" → ${langNames[toLang]} çevirisi. (Bu demo sürümde sözlükte olmayan kelimeler için gerçek bir çeviri API\'si entegre edilebilir.)`;
+  showToast('💡 Daha fazla kelime yakında eklenecek!');
+}
+
+function swapLangs(){
+  const f=document.getElementById('from-lang');
+  const t=document.getElementById('to-lang');
+  const tmp=f.value;f.value=t.value;t.value=tmp;
+  showToast('Diller değiştirildi ⇄');
+}
+function clearTranslate(){
+  document.getElementById('translate-input').value='';
+  document.getElementById('translate-output').textContent='Çeviri burada görünecek...';
+  document.getElementById('char-count').textContent='0 karakter';
+}
+
+function renderPhraseExamples(){
+  const el=document.getElementById('phrase-examples');
+  el.innerHTML=PHRASES.map(p=>`
+    <div class="example-phrase" onclick="loadPhrase('${p.orig}','${p.trans}')">
+      <div class="ep-original">${p.orig}</div>
+      <div class="ep-translation">${p.trans}</div>
+      <div class="ep-lang">${p.lang}</div>
+    </div>
+  `).join('');
+}
+function loadPhrase(orig,trans){
+  document.getElementById('translate-input').value=orig;
+  document.getElementById('translate-output').textContent=trans;
+  document.getElementById('translate-output').style.color='var(--ink)';
+  document.getElementById('char-count').textContent=orig.length+' karakter';
+  showToast('Örnek ifade yüklendi!');
+}
+
+// ============================
+// FLASHCARDS
+// ============================
+function loadFlashcards(btn,lang){
+  document.querySelectorAll('#fc-filter .filter-tab').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  fcLang=lang;fcIndex=0;fcCorrect=0;fcWrong=0;fcFlipped=false;
+  document.getElementById('fc-inner').style.transform='';
+  document.getElementById('flashcard').classList.remove('flipped');
+  renderFC();
+  document.getElementById('fc-score-display').textContent='';
+}
+
+function renderFC(){
+  const cards=FLASHCARD_DATA[fcLang];
+  const c=cards[fcIndex];
+  const pct=((fcIndex+1)/cards.length*100).toFixed(0);
+  document.getElementById('fc-progress').textContent=`Kart ${fcIndex+1} / ${cards.length}`;
+  document.getElementById('fc-prog-fill').style.width=pct+'%';
+  document.getElementById('fc-front-tag').textContent=fcLang.toUpperCase();
+  document.getElementById('fc-word').textContent=c.word;
+  document.getElementById('fc-hint').textContent='Karta tıkla ve çeviriyi gör';
+  document.getElementById('fc-translation').textContent=c.tr;
+  document.getElementById('fc-example').textContent='— '+c.example;
+  document.getElementById('flashcard').classList.remove('flipped');
+  fcFlipped=false;
+}
+
+function flipCard(){
+  const el=document.getElementById('flashcard');
+  el.classList.toggle('flipped');
+  fcFlipped=!fcFlipped;
+}
+
+function fcNext(){
+  const cards=FLASHCARD_DATA[fcLang];
+  fcIndex=(fcIndex+1)%cards.length;
+  renderFC();
+}
+function fcPrev(){
+  const cards=FLASHCARD_DATA[fcLang];
+  fcIndex=(fcIndex-1+cards.length)%cards.length;
+  renderFC();
+}
+function fcAnswer(correct){
+  if(correct)fcCorrect++;else fcWrong++;
+  const el=document.getElementById('fc-score-display');
+  el.innerHTML=`✓ Bildi: <strong style="color:var(--accent2)">${fcCorrect}</strong>  ·  ✗ Bilmedi: <strong style="color:#c0392b">${fcWrong}</strong>`;
+  fcNext();
+}
+
+// ============================
+// QUIZ
+// ============================
+function renderQuiz(){
+  const box=document.getElementById('quiz-container');
+  if(quizIndex>=QUIZ_QUESTIONS.length){
+    const pct=Math.round(quizScore/QUIZ_QUESTIONS.length*100);
+    let level='A1',desc='';
+    if(pct>=90){level='C2';desc='Mükemmel! Üst düzey dil bilgisine sahipsin.';}
+    else if(pct>=75){level='B2-C1';desc='Çok iyi! Üst-orta ve ileri seviyedesin.';}
+    else if(pct>=55){level='B1-B2';desc='İyi! Orta seviyedesin, devam et!';}
+    else if(pct>=35){level='A2-B1';desc='Başlangıç-orta arası. Pratik yapman gerekiyor.';}
+    else{level='A1-A2';desc='Henüz başlangıç aşamandasın. Temel derslere başla!';}
+    box.innerHTML=`<div class="result-box">
+      <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:12px">SONUÇ</div>
+      <div class="result-level">${level}</div>
+      <div style="font-family:'Syne',sans-serif;font-size:32px;color:var(--muted);margin-top:4px">${pct}%</div>
+      <div class="result-desc">${desc}</div>
+      <div style="margin-bottom:16px;font-size:14px;color:var(--muted)">${quizScore} / ${QUIZ_QUESTIONS.length} doğru</div>
+      <button class="btn-primary" style="font-size:15px;padding:12px 32px" onclick="restartQuiz()">Tekrar Dene</button>
+    </div>`;
+    return;
+  }
+  const q=QUIZ_QUESTIONS[quizIndex];
+  box.innerHTML=`
+    <div class="quiz-header">
+      <div class="quiz-qnum">Soru ${quizIndex+1} / ${QUIZ_QUESTIONS.length} · ${q.lang}</div>
+      <div class="quiz-question">${q.q}</div>
+    </div>
+    <div class="quiz-options">
+      ${q.opts.map((o,i)=>`<button class="quiz-option" onclick="answerQuiz(this,${i},${q.ans})">${o}</button>`).join('')}
+    </div>
+    <div class="quiz-footer">
+      <div class="quiz-score">Puan: ${quizScore} / ${quizIndex}</div>
+      <button class="btn-primary" id="quiz-next-btn" style="display:none" onclick="nextQuizQ()">Sonraki Soru →</button>
+    </div>
+  `;
+  quizAnswered=false;
+}
+
+function answerQuiz(btn,selected,correct){
+  if(quizAnswered)return;
+  quizAnswered=true;
+  const opts=document.querySelectorAll('.quiz-option');
+  opts[correct].classList.add('correct');
+  if(selected===correct){quizScore++;showToast('✓ Doğru!');}
+  else{btn.classList.add('wrong');showToast('✗ Yanlış.');}
+  document.getElementById('quiz-next-btn').style.display='block';
+}
+function nextQuizQ(){quizIndex++;renderQuiz();}
+function restartQuiz(){quizIndex=0;quizScore=0;quizAnswered=false;renderQuiz();}
+
+// ============================
+// GALLERY
+// ============================
+function renderGallery(){
+  document.getElementById('gallery-grid').innerHTML=GALLERY.map(g=>`
+    <div class="gallery-card" onclick="showToast('${g.label} — ${g.sub}')">
+      <div class="gallery-emoji">${g.emoji}</div>
+      <div class="gallery-label">${g.label}</div>
+      <div class="gallery-sub">${g.sub}</div>
+    </div>
+  `).join('');
+}
+
+// ============================
+// REMINDERS
+// ============================
+function addReminder(){
+  const title=document.getElementById('r-title').value.trim();
+  const lang=document.getElementById('r-lang').value;
+  const type=document.getElementById('r-type').value;
+  const date=document.getElementById('r-date').value;
+  const time=document.getElementById('r-time').value;
+  const repeat=document.getElementById('r-repeat').value;
+  const duration=document.getElementById('r-duration').value;
+  const note=document.getElementById('r-note').value.trim();
+  if(!title||!date||!time){showToast('⚠️ Başlık, tarih ve saat zorunludur!');return;}
+  reminders.unshift({id:Date.now(),title,lang,type,date,time,repeat,duration,note});
+  localStorage.setItem('dk-reminders',JSON.stringify(reminders));
+  renderReminders();
+  updateStatReminder();
+  document.getElementById('r-title').value='';
+  document.getElementById('r-note').value='';
+  showToast('✅ Hatırlatıcı eklendi!');
+  tryNotif(title,date,time);
+}
+
+function deleteReminder(id){
+  reminders=reminders.filter(r=>r.id!==id);
+  localStorage.setItem('dk-reminders',JSON.stringify(reminders));
+  renderReminders();
+  updateStatReminder();
+  showToast('🗑 Silindi');
+}
+
+function renderReminders(){
+  const el=document.getElementById('reminders-list');
+  const upBanner=document.getElementById('upcoming-reminder');
+  const repeatLabel={once:'Bir Kez',daily:'Her Gün',weekly:'Her Hafta',weekdays:'Hafta İçi',weekend:'Hafta Sonu'};
+  
+  // upcoming
+  const now=new Date();
+  const upcoming=reminders.filter(r=>{
+    const dt=new Date(r.date+'T'+r.time);
+    return dt>now;
+  }).sort((a,b)=>new Date(a.date+'T'+a.time)-new Date(b.date+'T'+b.time));
+  
+  if(upcoming.length){
+    const n=upcoming[0];
+    upBanner.innerHTML=`<div class="upcoming-banner">
+      <div class="upcoming-icon">⏰</div>
+      <div class="upcoming-text">
+        <div class="upcoming-title">Yaklaşan: ${n.title}</div>
+        <div class="upcoming-sub">${n.date} · ${n.time} · ${n.duration}</div>
+      </div>
+    </div>`;
+  } else {
+    upBanner.innerHTML='';
+  }
+
+  if(!reminders.length){
+    el.innerHTML=`<div class="empty-reminders">
+      <div class="empty-icon">📅</div>
+      <div class="empty-text">Henüz hatırlatıcı yok</div>
+      <div style="font-size:13px;margin-top:8px">Soldan yeni bir tane ekle!</div>
+    </div>`;
+    return;
+  }
+  el.innerHTML=reminders.map(r=>`
+    <div class="reminder-item">
+      <div class="r-icon">${r.type?r.type.split(' ')[0]:'📖'}</div>
+      <div class="r-detail">
+        <div class="r-title">${r.title}</div>
+        <div class="r-meta">${r.date} · ${r.time} · ${repeatLabel[r.repeat]||r.repeat} · ${r.duration}</div>
+        ${r.note?`<div style="font-size:12px;color:var(--muted);margin-top:4px;font-style:italic">${r.note}</div>`:''}
+      </div>
+      <div class="r-right">
+        <div class="r-tag">${r.lang}</div>
+        <button class="r-del" onclick="deleteReminder(${r.id})">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateStatReminder(){
+  document.getElementById('stat-rem').textContent=reminders.length;
+}
+
+function tryNotif(title,date,time){
+  if(!('Notification' in window))return;
+  const diff=new Date(date+'T'+time)-new Date();
+  if(diff<=0)return;
+  Notification.requestPermission().then(p=>{
+    if(p==='granted') setTimeout(()=>{
+      new Notification('⏰ DilKampüsü',{body:title});
+    },diff);
+  });
+}
+
+// ============================
+// TOAST
+// ============================
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+init();
+</script>
+</body>
+</html>
