@@ -2203,6 +2203,554 @@ let _tsx=0;
 document.addEventListener("touchstart",e=>{_tsx=e.touches[0].clientX},{passive:true});
 document.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-_tsx;if(Math.abs(dx)<80)return;const ap=document.querySelector(".page.active");if(!ap)return;const po=["home","teachers","videos","translate","flashcards","quiz","gallery","reminders"];const ci=po.indexOf(ap.id.replace("page-",""));if(dx<0&&ci<po.length-1)showPage(po[ci+1],null);else if(dx>0&&ci>0)showPage(po[ci-1],null);},{passive:true});
 init();
+
+// ============================
+// AI CHATBOT
+// ============================
+const CHAT_SYSTEM = `Sen DilKampüsünün yapay zeka asistanısın. Adın Dila. Kullanıcılara dil öğrenme konusunda yardım ediyorsun.
+
+Platform özellikleri:
+- 16 uzman hoca (İngilizce, İspanyolca, Almanca, Fransızca, Japonca, Arapça, Çince, İtalyanca)
+- 16 örnek video (başlangıç, orta, ileri seviye)
+- Anında çevirici (12 dil)
+- Kelime kartları (5 dil)
+- Seviye testi, galeri, hatırlatıcılar
+
+Kullanıcı ne sorarsa sor — dil öğrenme tavsiyeleri, hoca önerisi, kelime teknikleri, sınav hazırlığı, çeviri yardımı vb. Türkçe konuş, samimi ve teşvik edici ol. Kısa ve net cevaplar ver.`;
+
+let chatHistory = [];
+let chatOpen = false;
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  const win = document.getElementById('chat-window');
+  const fabIcon = document.getElementById('chat-fab-icon');
+  win.style.display = chatOpen ? 'flex' : 'none';
+  if (fabIcon) fabIcon.textContent = chatOpen ? '✕' : '💬';
+  if (chatOpen && chatHistory.length === 0) openChatWithWelcome();
+}
+
+function openChatWithWelcome() {
+  // Show welcome overlay first
+  const overlay = document.getElementById('chat-welcome-overlay');
+  if (overlay) {
+    overlay.style.display = 'flex';
+    return;
+  }
+  typeWelcomeMessage();
+}
+
+function dismissWelcome() {
+  const overlay = document.getElementById('chat-welcome-overlay');
+  if (overlay) overlay.style.display = 'none';
+  typeWelcomeMessage();
+}
+
+function typeWelcomeMessage() {
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML = '';
+  const lines = [
+    'Merhaba! 👋 Ben <strong>Dila</strong>, DilKampüsünün yapay zeka asistanıyım.',
+    'Sana şu konularda yardımcı olabilirim:',
+    '🎯 <strong>Hoca seçimi</strong> — Seviyene uygun en iyi hocayı bul\n📚 <strong>Dil tavsiyeleri</strong> — Hangi dili, nasıl öğrenirsin\n🌐 <strong>Çeviri & kelime</strong> — Anında yardım\n📝 <strong>Sınav hazırlığı</strong> — IELTS, DELE, JLPT ve daha fazlası',
+    '<em>Nasıl yardımcı olabilirim?</em> ✨'
+  ];
+  let i = 0;
+  function showNext() {
+    if (i >= lines.length) return;
+    const d = document.createElement('div');
+    d.className = 'chat-msg bot';
+    d.style.opacity = '0';
+    d.style.transform = 'translateY(8px)';
+    d.style.transition = 'opacity .35s ease, transform .35s ease';
+    d.innerHTML = `<div class="chat-bubble bot-bubble">${lines[i].replace(/\n/g,'<br>')}</div>`;
+    msgs.appendChild(d);
+    msgs.scrollTop = msgs.scrollHeight;
+    requestAnimationFrame(() => { d.style.opacity='1'; d.style.transform='translateY(0)'; });
+    i++;
+    if (i < lines.length) setTimeout(showNext, 700);
+  }
+  setTimeout(showNext, 200);
+}
+
+// Auto-open chat on page load after 1.2s
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const overlay = document.getElementById('chat-welcome-overlay');
+    if (overlay) {
+      overlay.style.display = 'flex';
+    } else {
+      chatOpen = true;
+      const win = document.getElementById('chat-window');
+      const fab = document.getElementById('chat-fab');
+      win.style.display = 'flex';
+      fab.innerHTML = '<span style="font-size:22px">✕</span>';
+      typeWelcomeMessage();
+    }
+  }, 1200);
+});
+
+function addBotMsg(text) {
+  const el = document.getElementById('chat-messages');
+  const d = document.createElement('div');
+  d.className = 'chat-msg bot';
+  d.innerHTML = `<div class="chat-bubble bot-bubble">${text.replace(/\n/g,'<br>')}</div>`;
+  el.appendChild(d);
+  el.scrollTop = el.scrollHeight;
+}
+function addUserMsg(text) {
+  const el = document.getElementById('chat-messages');
+  const d = document.createElement('div');
+  d.className = 'chat-msg user';
+  d.innerHTML = `<div class="chat-bubble user-bubble">${text}</div>`;
+  el.appendChild(d);
+  el.scrollTop = el.scrollHeight;
+}
+function addTyping() {
+  const el = document.getElementById('chat-messages');
+  const d = document.createElement('div');
+  d.className = 'chat-msg bot'; d.id = 'chat-typing';
+  d.innerHTML = `<div class="chat-bubble bot-bubble"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
+  el.appendChild(d); el.scrollTop = el.scrollHeight;
+}
+function removeTyping() { const t=document.getElementById('chat-typing'); if(t)t.remove(); }
+
+async function sendChatMsg() {
+  const inp = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = ''; inp.style.height = 'auto';
+  addUserMsg(text);
+  chatHistory.push({ role: 'user', content: text });
+  addTyping();
+  document.getElementById('chat-send').disabled = true;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: CHAT_SYSTEM,
+        messages: chatHistory
+      })
+    });
+    const data = await res.json();
+    removeTyping();
+    const reply = data.content?.[0]?.text || 'Üzgünüm, bir hata oluştu. Tekrar dener misin?';
+    chatHistory.push({ role: 'assistant', content: reply });
+    addBotMsg(reply);
+  } catch(e) {
+    removeTyping();
+    addBotMsg('Bağlantı hatası oluştu. Lütfen tekrar dene! 🔄');
+  }
+  document.getElementById('chat-send').disabled = false;
+  document.getElementById('chat-input').focus();
+}
+
+function chatKeyDown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMsg(); }
+}
+function chatQuick(text) {
+  document.getElementById('chat-input').value = text;
+  sendChatMsg();
+}
 </script>
+
+<!-- ========== CHATBOT STYLES ========== -->
+<style>
+/* OVERLAY behind chat */
+#chat-overlay {
+  position:fixed;inset:0;z-index:500;
+  background:rgba(26,24,20,0.55);
+  backdrop-filter:blur(6px);
+  opacity:0;pointer-events:none;
+  transition:opacity .35s ease;
+}
+#chat-overlay.visible{opacity:1;pointer-events:all}
+
+/* CHAT PANEL — slides up from bottom */
+#chat-panel {
+  position:fixed;
+  bottom:0;left:50%;
+  transform:translateX(-50%) translateY(100%);
+  z-index:501;
+  width:420px;max-width:100vw;
+  height:min(620px, 92vh);
+  background:var(--surface);
+  border-radius:24px 24px 0 0;
+  box-shadow:0 -8px 60px rgba(26,24,20,.22);
+  display:flex;flex-direction:column;overflow:hidden;
+  transition:transform .4s cubic-bezier(.32,1.6,.64,1);
+}
+#chat-panel.open{transform:translateX(-50%) translateY(0)}
+
+/* drag handle */
+.chat-drag-handle{
+  width:40px;height:4px;border-radius:2px;
+  background:var(--border);margin:10px auto 0;flex-shrink:0;
+}
+
+/* WELCOME SCREEN */
+#chat-welcome {
+  position:absolute;inset:0;z-index:10;
+  background:var(--ink);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:32px 28px 28px;
+  text-align:center;
+  border-radius:24px 24px 0 0;
+  transition:opacity .3s, transform .3s;
+}
+#chat-welcome.hidden{opacity:0;pointer-events:none;transform:scale(.96)}
+.welcome-bot-avatar{
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#e87a3e);
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;margin-bottom:18px;
+  box-shadow:0 8px 28px rgba(200,82,42,.4);
+}
+.welcome-title{
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;
+  color:#f7f4ef;letter-spacing:-0.5px;margin-bottom:8px;
+}
+.welcome-sub{
+  font-family:'Lora',serif;font-size:14px;font-style:italic;
+  color:rgba(247,244,239,.65);line-height:1.7;margin-bottom:24px;
+}
+.welcome-features{
+  display:flex;flex-direction:column;gap:10px;width:100%;margin-bottom:24px;
+}
+.welcome-feat{
+  background:rgba(247,244,239,.07);
+  border:1px solid rgba(247,244,239,.1);
+  border-radius:14px;padding:13px 16px;
+  display:flex;align-items:center;gap:14px;text-align:left;
+  cursor:pointer;transition:background .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.welcome-feat:hover{background:rgba(247,244,239,.12)}
+.wf-icon{font-size:22px;flex-shrink:0}
+.wf-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#f7f4ef}
+.wf-sub{font-size:11px;color:rgba(247,244,239,.45);margin-top:2px}
+.btn-start-chat{
+  width:100%;background:var(--accent);color:#fff;
+  border:none;border-radius:14px;padding:15px;
+  font-family:'Syne',sans-serif;font-size:16px;font-weight:700;
+  cursor:pointer;transition:background .2s,transform .1s;
+  -webkit-tap-highlight-color:transparent;
+  letter-spacing:.3px;
+}
+.btn-start-chat:hover{background:#b04020}
+.btn-start-chat:active{transform:scale(.98)}
+
+/* CHAT HEADER */
+.chat-header{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 18px;background:var(--ink);flex-shrink:0;
+}
+.chat-av{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#e87a3e);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.chat-hname{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#f7f4ef}
+.chat-hstatus{
+  display:flex;align-items:center;gap:5px;
+  font-size:11px;color:rgba(247,244,239,.5);
+  font-family:'Syne',sans-serif;margin-top:1px;
+}
+.chat-online{width:7px;height:7px;border-radius:50%;background:#2ecc71;animation:pulse 2s infinite}
+.chat-hclose{
+  margin-left:auto;background:rgba(247,244,239,.08);border:none;
+  color:rgba(247,244,239,.6);cursor:pointer;
+  width:32px;height:32px;border-radius:8px;font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;-webkit-tap-highlight-color:transparent;
+}
+.chat-hclose:hover{background:rgba(247,244,239,.15);color:#f7f4ef}
+
+/* MESSAGES */
+#chat-messages{
+  flex:1;overflow-y:auto;
+  padding:16px 16px 8px;
+  display:flex;flex-direction:column;gap:10px;
+}
+#chat-messages::-webkit-scrollbar{width:4px}
+#chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.chat-msg{display:flex;align-items:flex-end;gap:8px}
+.chat-msg.user{justify-content:flex-end}
+.chat-msg.bot{justify-content:flex-start}
+.msg-av{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#e87a3e);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;margin-bottom:2px;
+}
+.chat-bubble{
+  max-width:78%;border-radius:18px;
+  padding:10px 14px;
+  font-family:'Lora',serif;font-size:13.5px;line-height:1.65;
+  word-break:break-word;
+}
+.bot-bubble{
+  background:var(--bg2);color:var(--ink);
+  border-bottom-left-radius:4px;
+}
+.user-bubble{
+  background:var(--accent);color:#fff;
+  border-bottom-right-radius:4px;
+}
+.typing-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted);margin:0 2px;animation:typingBounce 1.2s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes typingBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}}
+
+/* QUICK REPLIES */
+.chat-quick{
+  display:flex;gap:7px;padding:8px 16px 4px;
+  overflow-x:auto;flex-shrink:0;scrollbar-width:none;
+}
+.chat-quick::-webkit-scrollbar{display:none}
+.cq-btn{
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+  background:var(--surface);border:1.5px solid var(--border);
+  color:var(--ink2);border-radius:50px;padding:6px 13px;
+  cursor:pointer;white-space:nowrap;flex-shrink:0;
+  transition:all .15s;-webkit-tap-highlight-color:transparent;
+}
+.cq-btn:hover,.cq-btn:active{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* INPUT */
+.chat-input-area{
+  display:flex;align-items:flex-end;gap:8px;
+  padding:10px 14px 16px;
+  border-top:1px solid var(--border);flex-shrink:0;
+}
+#chat-input{
+  flex:1;font-family:'Lora',serif;font-size:14px;
+  background:var(--bg2);border:1.5px solid var(--border);
+  color:var(--ink);border-radius:14px;
+  padding:10px 14px;outline:none;resize:none;
+  max-height:110px;line-height:1.5;
+  transition:border-color .2s;
+}
+#chat-input:focus{border-color:var(--accent)}
+#chat-send-btn{
+  width:42px;height:42px;border-radius:50%;
+  background:var(--accent);border:none;color:#fff;
+  cursor:pointer;font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+#chat-send-btn:hover{background:#b04020;transform:scale(1.1)}
+#chat-send-btn:disabled{background:var(--border);cursor:not-allowed;transform:none}
+
+/* FAB (minimized) */
+#chat-fab-mini{
+  position:fixed;bottom:76px;right:18px;z-index:490;
+  width:52px;height:52px;border-radius:50%;
+  background:var(--accent);border:none;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  font-size:22px;
+  box-shadow:0 4px 20px rgba(200,82,42,.45);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+  -webkit-tap-highlight-color:transparent;
+}
+#chat-fab-mini:hover{transform:scale(1.1)}
+#chat-fab-mini.show{display:flex;animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(0)}to{transform:scale(1)}}
+
+@media(max-width:900px){
+  #chat-panel{width:100%;border-radius:20px 20px 0 0;height:min(560px,88vh)}
+  #chat-welcome{border-radius:20px 20px 0 0}
+  #chat-fab-mini{bottom:68px;right:14px}
+}
+</style>
+
+<!-- OVERLAY -->
+<div id="chat-overlay" onclick="closeChat()"></div>
+
+<!-- CHAT PANEL -->
+<div id="chat-panel">
+  <div class="chat-drag-handle"></div>
+
+  <!-- WELCOME SCREEN -->
+  <div id="chat-welcome">
+    <div class="welcome-bot-avatar">🤖</div>
+    <div class="welcome-title">Merhaba! Ben Dila 👋</div>
+    <div class="welcome-sub">DilKampüsü'nün yapay zeka asistanıyım.<br>Dil öğrenmende sana yardımcı olmak için buradayım!</div>
+    <div class="welcome-features">
+      <div class="welcome-feat" onclick="startWithQ('Bana uygun hoca öner')">
+        <span class="wf-icon">👩‍🏫</span>
+        <div><div class="wf-title">Hoca Seçimi</div><div class="wf-sub">Sana en uygun hocayı bulurum</div></div>
+      </div>
+      <div class="welcome-feat" onclick="startWithQ('Hangi dili öğrenmeliyim?')">
+        <span class="wf-icon">🗺️</span>
+        <div><div class="wf-title">Dil Tavsiyeleri</div><div class="wf-sub">Hangi dili, nasıl öğrenirim?</div></div>
+      </div>
+      <div class="welcome-feat" onclick="startWithQ('Kelime ezberlemek için en iyi yöntem nedir?')">
+        <span class="wf-icon">🃏</span>
+        <div><div class="wf-title">Kelime & Gramer</div><div class="wf-sub">Hızlı öğrenme teknikleri</div></div>
+      </div>
+    </div>
+    <button class="btn-start-chat" onclick="dismissWelcome()">Nasıl yardımcı olabilirim? ✨</button>
+  </div>
+
+  <!-- CHAT HEADER -->
+  <div class="chat-header">
+    <div class="chat-av">🤖</div>
+    <div>
+      <div class="chat-hname">Dila — DilKampüsü AI</div>
+      <div class="chat-hstatus"><div class="chat-online"></div>Çevrimiçi · her zaman hazır</div>
+    </div>
+    <button class="chat-hclose" onclick="closeChat()">✕</button>
+  </div>
+
+  <!-- MESSAGES -->
+  <div id="chat-messages"></div>
+
+  <!-- QUICK REPLIES -->
+  <div class="chat-quick">
+    <button class="cq-btn" onclick="chatQ('Hangi dili öğrenmeliyim?')">🤔 Hangi dil?</button>
+    <button class="cq-btn" onclick="chatQ('Bana hoca öner')">👩‍🏫 Hoca öner</button>
+    <button class="cq-btn" onclick="chatQ('İngilizce nasıl öğrenirim?')">🇬🇧 İngilizce</button>
+    <button class="cq-btn" onclick="chatQ('IELTS için ne yapmalıyım?')">📝 IELTS</button>
+    <button class="cq-btn" onclick="chatQ('Kelime ezberleme yöntemleri neler?')">🃏 Kelime</button>
+    <button class="cq-btn" onclick="chatQ('Japonca öğrenmek zor mu?')">🇯🇵 Japonca</button>
+  </div>
+
+  <!-- INPUT -->
+  <div class="chat-input-area">
+    <textarea id="chat-input" rows="1" placeholder="Mesajını yaz..."
+      onkeydown="chatKeyDown(event)"
+      oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+    <button id="chat-send-btn" onclick="sendChat()">&#9654;</button>
+  </div>
+</div>
+
+<!-- FAB (after close) -->
+<button id="chat-fab-mini" onclick="openChat()" title="Dila ile sohbet et">💬</button>
+
+<!-- ========== CHATBOT SCRIPT ========== -->
+<script>
+const CHAT_SYS = `Sen DilKampüsünün yapay zeka asistanısın. Adın Dila. Kullanıcılara dil öğrenme konusunda yardım ediyorsun.
+Platform: 16 uzman hoca, 16 video, çevirici (12 dil), kelime kartları, seviye testi, hatırlatıcılar.
+Diller: İngilizce, İspanyolca, Almanca, Fransızca, Japonca, Arapça, Çince, İtalyanca.
+Türkçe konuş, samimi ve motive edici ol. Kısa, net cevaplar ver. Emoji kullan.`;
+
+let chatHist = [];
+let welcomeDismissed = false;
+
+function openChat() {
+  document.getElementById('chat-panel').classList.add('open');
+  document.getElementById('chat-overlay').classList.add('visible');
+  document.getElementById('chat-fab-mini').classList.remove('show');
+}
+
+function closeChat() {
+  document.getElementById('chat-panel').classList.remove('open');
+  document.getElementById('chat-overlay').classList.remove('visible');
+  if (welcomeDismissed) {
+    document.getElementById('chat-fab-mini').classList.add('show');
+  }
+}
+
+function dismissWelcome() {
+  const w = document.getElementById('chat-welcome');
+  w.classList.add('hidden');
+  welcomeDismissed = true;
+  setTimeout(() => {
+    w.style.display = 'none';
+    if (chatHist.length === 0) {
+      addBotMsg('Merhaba! 😊 Dil öğrenme yolculuğunda sana nasıl yardımcı olabilirim?\n\nAşağıdaki hızlı seçeneklerden birini seçebilir ya da istediğini yazabilirsin!');
+    }
+  }, 300);
+}
+
+function startWithQ(q) {
+  dismissWelcome();
+  setTimeout(() => chatQ(q), 400);
+}
+
+function addBotMsg(text) {
+  const el = document.getElementById('chat-messages');
+  const d = document.createElement('div');
+  d.className = 'chat-msg bot';
+  d.innerHTML = `<div class="msg-av">🤖</div><div class="chat-bubble bot-bubble">${text.replace(/\n/g,'<br>')}</div>`;
+  el.appendChild(d);
+  el.scrollTop = el.scrollHeight;
+}
+
+function addUserMsg(text) {
+  const el = document.getElementById('chat-messages');
+  const d = document.createElement('div');
+  d.className = 'chat-msg user';
+  d.innerHTML = `<div class="chat-bubble user-bubble">${text}</div>`;
+  el.appendChild(d);
+  el.scrollTop = el.scrollHeight;
+}
+
+function addTyping() {
+  const el = document.getElementById('chat-messages');
+  const d = document.createElement('div');
+  d.className = 'chat-msg bot'; d.id = 'chat-typing';
+  d.innerHTML = `<div class="msg-av">🤖</div><div class="chat-bubble bot-bubble"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
+  el.appendChild(d); el.scrollTop = el.scrollHeight;
+}
+
+function removeTyping() { const t = document.getElementById('chat-typing'); if(t) t.remove(); }
+
+async function sendChat() {
+  const inp = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = ''; inp.style.height = 'auto';
+  if (!welcomeDismissed) dismissWelcome();
+  addUserMsg(text);
+  chatHist.push({ role: 'user', content: text });
+  addTyping();
+  document.getElementById('chat-send-btn').disabled = true;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: CHAT_SYS,
+        messages: chatHist
+      })
+    });
+    const data = await res.json();
+    removeTyping();
+    const reply = data.content?.[0]?.text || 'Üzgünüm, bir hata oluştu. Tekrar dener misin? 🔄';
+    chatHist.push({ role: 'assistant', content: reply });
+    addBotMsg(reply);
+  } catch(e) {
+    removeTyping();
+    addBotMsg('Bağlantı hatası oluştu. Lütfen tekrar dene! 🔄');
+  }
+  document.getElementById('chat-send-btn').disabled = false;
+  document.getElementById('chat-input').focus();
+}
+
+function chatKeyDown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+}
+
+function chatQ(text) {
+  document.getElementById('chat-input').value = text;
+  sendChat();
+}
+
+// Auto-open on page load
+window.addEventListener('load', () => {
+  setTimeout(() => openChat(), 600);
+});
+</script>
+
 </body>
 </html>
